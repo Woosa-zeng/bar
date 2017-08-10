@@ -2,18 +2,17 @@
   <div id="sell">
     <vheader></vheader>
     <div class="nav">
-      <div class="nav-goods">
-        <!--<router-link to="/sell/goods">点单</router-link>-->
-        <a @click="go('sell')">点单</a>
+      <div class="nav-goods"
+           @click="doActive(0)">
+        <span :class="{'isActive': isActive[0]}">点单</span>
       </div>
-      <div class="nav-chart">
-        <!--<router-link to="/sell/chat">聊天</router-link>-->
-        <a @click="go('chart')">聊天</a>
+      <div class="nav-chart"
+           @click="doActive(1)">
+        <span :class="{'isActive': isActive[1]}">聊天</span>
       </div>
     </div>
     <div id="content">
-      <!--<router-view></router-view>-->
-      <goods></goods>
+      <router-view></router-view>
     </div>
     <vfooter></vfooter>
     <div class="mask" :class="{hide: genderflag}">
@@ -43,19 +42,48 @@
 <script type="text/ecmascript-6">
   import vheader from '../header/header'
   import vfooter from '../footer/footer'
-  import goods from '../goods/goods'
   export default {
     data() {
       return {
         gender: '',
         ismale: false,
         isfemale: false,
-        genderflag: false
+        genderflag: false,
+        isActive: [true, false]
+      }
+    },
+    mounted() {
+      this.setActiveNav()
+    },
+    computed: {
+      activeRoute() {
+        return this.$store.state.activeRoute
       }
     },
     methods: {
-      go(path) {
-        console.log(path)
+      doActive(index) {
+        this.go(index)
+        this.$store.commit('ROUTE_CHANGE', {activeRoute: this.$route.name})
+        this.setActiveNav()
+      },
+      go(index) {
+        switch (index) {
+          case 0:
+            this.$router.push({name: 'goods'})
+            break
+          case 1:
+            this.$router.push({name: 'chat'})
+            break
+        }
+      },
+      setActiveNav() {
+        let mapRoute = {
+          'goods': 0,
+          'chat': 1
+        }
+        this.isActive = [false, false]
+        this.isActive[mapRoute[this.activeRoute]] = true
+        console.log('id' + this.activeRoute)
       },
       changeGender(val) {
         this.gender = val
@@ -73,8 +101,7 @@
     },
     components: {
       vheader,
-      vfooter,
-      goods
+      vfooter
     }
   }
 </script>
@@ -100,11 +127,12 @@
         font-size: 15px;
         font-weight: bold;
       }
-      .active{
-        color: #7b3ce2;
-        border-bottom: 2px solid #7b3ce2;
+    .isActive{
+      color: #7b3ce2;
+      border-bottom: 2px solid #7b3ce2;
       }
     }
+
   }
   .hide{
     display: none;

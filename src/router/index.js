@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import sell from '@/components/sell/sell'
-import chat from '@/components/chat/chat'
-import goods from '@/components/goods/goods'
+import chating from '@/components/chating/chating'
 
 Vue.use(Router)
 
@@ -11,21 +10,24 @@ export default new Router({
     {
       path: '/',
       name: 'sell',
-      component: sell
-    },
-    {
-      path: '/sell',
-      name: 'sell',
       component: sell,
       children: [
-        {path: 'goods', components: goods},
-        {path: 'chat', components: chat}
+        {
+          path: 'goods',
+          name: 'goods',
+          component: require('../components/goods/goods')
+        },
+        {
+          path: 'chat',
+          name: 'chat',
+          component: require('../components/chat/chat')
+        }
       ]
     },
     {
-      path: '/chat',
-      name: 'chat',
-      component: chat
+      path: '/chating',
+      name: 'chating',
+      component: chating
     }
   ]
 })
