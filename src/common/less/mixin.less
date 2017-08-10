@@ -1,0 +1,19 @@
+.border-1px(@color: #e5e5e5){
+  position: relative;
+  &:after{
+    display: block;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    border-bottom: 1px solid @color;
+    content: '';
+  }
+}
+.border-none(){
+  &:after {
+    display: none;
+  }
+}
+
+
