@@ -20,6 +20,7 @@
   export default {}
 </script>
 <style lang="less" rel="stylesheet/less">
+  @import "../../common/less/mixin.less";
  .header{
    width: 100%;
    background: #201e34;
@@ -62,10 +63,10 @@
          display: inline-block;
          width: 50px;
          margin-bottom: 2px;
-         background-image: -webkit-gradient(linear, 0 0, 0 bottom, from(#7b3ce2), to(#c549d5));
+         font-size: 30px;
          -webkit-background-clip: text;
          -webkit-text-fill-color: transparent;
-         font-size: 30px;
+         .bgimg-pink-t-b;
        }
        .userName{
          display: inline-block;

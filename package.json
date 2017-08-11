@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "better-scroll": "^0.4.0",
     "element-ui": "^1.4.1",
     "glob": "^7.1.2",
     "i": "^0.3.5",

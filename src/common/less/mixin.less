@@ -1,3 +1,4 @@
+
 .border-1px(@color: #e5e5e5){
   position: relative;
   &:after{
@@ -15,5 +16,19 @@
     display: none;
   }
 }
+.bg-pink-l-r(@purple: #7b3ce2,@pink: #df54b2){
+  background: #8f3fdd;
+  background: -webkit-linear-gradient(left,@purple,@pink);
+  background: -o-linear-gradient(left,@purple,@pink);
+  background: -moz-linear-gradient(left,@purple,@pink);
+  background: linear-gradient(to right,@purple,@pink);
+}
+.bgimg-pink-t-b(@pink: #df54b2,@purple: #7b3ce2){
+  background-image: -webkit-linear-gradient(top,@pink ,@purple);
+  background-image: -o-linear-gradient(top,@pink ,@purple);
+  background-image: -moz-linear-gradient(top,@pink ,@purple);
+  background-image: linear-gradient(to top,@pink ,@purple);
+}
+
 
 

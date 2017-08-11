@@ -30,24 +30,50 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foodswrapper" id="wrapper">
+      <div>
+      <h1 class="title">{{typename}}</h1>
       <ul>
-        <li>
-          <h1>{{typename}}</h1>
-          <ul>
-            <li v-for="item in goods" class="food-list">
-              <h2>{{item.productName}}</h2>
-            </li>
-          </ul>
+        <li v-for="item in goods" class="food-item">
+          <div class="icon">
+            <img width="70" height="70" :src=item.speciDetail.images>
+          </div>
+          <div class="content">
+            <h2 class="name">{{item.productName}}</h2>
+            <p class="desc">100ml</p>
+            <div class="price">
+              <span class="now">￥{{item.price}}</span>
+              <span class="old" v-show="item.discount">￥{{item.discountPrice}}</span>
+            </div>
+            <div class="cartcontrol-wrapper">
+              <cartcontrol :item="item"></cartcontrol>
+            </div>
+          </div>
+        </li>
+        <li v-for="item in goods" class="food-item">
+          <div class="icon">
+            <img width="70" height="70" :src=item.speciDetail.images>
+          </div>
+          <div class="content">
+            <h2 class="name">{{item.productName}}</h2>
+            <p class="desc">100ml</p>
+            <div class="price">
+              <span class="now">￥{{item.price}}</span>
+              <span class="old" v-show="item.discount">￥{{item.discountPrice}}</span>
+            </div>
+          </div>
         </li>
       </ul>
+      </div>
     </div>
-    <shopcart></shopcart>
+    <shopcart :select-foods="selectFoods"></shopcart>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import shopcart from '../shopcart/shopcart'
+  import cartcontrol from '../cartcontrol/cartcontrol'
+  import BScroll from 'better-scroll'
 
   export default {
     data() {
@@ -65,6 +91,17 @@
       this.go(0)
     },
     mounted() {
+    },
+    computed: {
+      selectFoods() {
+        let foods = []
+        this.goods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+        return foods
+      }
     },
     methods: {
       setCur() {
@@ -103,11 +140,21 @@
         })
           .then((res) => {
             this.goods = res.data
+            this.$nextTick(() => {
+              this._initScroll()
+            })
           })
+      },
+      _initScroll() {
+        // this.foodsScroll = new BScroll(document.getElementById('wrapper'), {})
+        this.foodsScroll = new BScroll(this.$refs.foodswrapper, {
+          click: true
+        })
       }
     },
     components: {
-      shopcart
+      shopcart,
+      cartcontrol
     }
   }
 </script>
@@ -149,7 +196,65 @@
     }
     .foods-wrapper{
       flex: 1;
-
+      .title{
+        padding-left:14px;
+        height: 26px;
+        line-height: 26px;
+        border-left: 2px solid #e5e5e5;
+        font-size: 12px;
+        color: #333;
+        background: #eee;
+      }
+      .food-item{
+        display: flex;
+        margin: 18px;
+        padding-bottom:18px;
+        .border-1px;
+        &:last-child{
+           margin-bottom: 0;
+          .border-none;
+         }
+        .icon{
+          flex: 0 0 70px;
+          margin-right: 10px;
+        }
+        .content{
+          flex: 1;
+          .name{
+            margin: 2px 0 8px 0;
+            height: 17px;
+            line-height: 17px;
+            font-size: 17px;
+            color: #000;
+          }
+          .desc{
+            margin-bottom: 8px;
+            line-height: 10px;
+            font-size: 10px;
+            color: rgb(147, 153, 159)
+          }
+          .price{
+            font-weight: 700;
+            line-height: 24px;
+            .now{
+              margin-right: 4px;
+              font-size: 14px;
+              color: rgb(240,20,20);
+            }
+            .old{
+              text-decoration: line-through;
+              font-size: 10px;
+              color: rgb(147, 153, 159)
+            }
+          }
+          .cartcontrol-wrapper{
+            position: absolute;
+            right: 0;
+            bottom: 12px;
+          }
+        }
+      }
     }
   }
+
 </style>
