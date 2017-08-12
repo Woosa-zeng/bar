@@ -11,6 +11,7 @@
 </template>
 <script type="text/ecmascript-6">
   import Vue from 'vue'
+  import axios from 'axios'
   export default {
     props: {
       item: {
@@ -24,11 +25,25 @@
         if (!event._constructed) {
           return
         }
-        if (!this.item.count) {
-          Vue.set(this.item, 'count', 1)
-        } else {
-          this.item.count++
-        }
+        axios.post('/api/tOrderDetailController.do?addShopCart', {
+          proId: this.item.id,
+          number: 1,
+          seatNumber: 11,
+          dapartid: 12312
+        }).then((res) => {
+          console.log(res)
+          if (!this.item.count) {
+            Vue.set(this.item, 'count', 1)
+          } else {
+            this.item.count++
+          }
+        }).catch((error) => {
+          console.log(error)
+          this.$message({
+            type: 'error',
+            message: '出错了'
+          })
+        })
       },
       decreaseCart(event) {
         if (!event._constructed) {

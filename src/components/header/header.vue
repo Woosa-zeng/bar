@@ -59,10 +59,13 @@
         gender: '',
         ismale: true,
         isfemale: false,
-        genderflag: false,
+        genderflag: window.localStorage.getItem('genderflag'),
         cName: true,
         nickname: '18号桌'
       }
+    },
+    created() {
+      console.log(this.genderflag)
     },
     watch: {
       gender() {
@@ -104,6 +107,7 @@
         }
         setTimeout(() => {
           this.genderflag = true
+          window.localStorage.setItem('genderflag', true)
         }, 1000)
       }
     }

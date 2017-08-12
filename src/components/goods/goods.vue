@@ -40,7 +40,7 @@
           </div>
           <div class="content">
             <h2 class="name">{{item.productName}}</h2>
-            <p class="desc">100ml</p>
+            <p class="desc">{{item.speci}}</p>
             <div class="price">
               <span class="now">￥{{item.price}}</span>
               <span class="old" v-show="item.discount">￥{{item.discountPrice}}</span>
@@ -116,19 +116,24 @@
         }
       },
       getInfo() {
-        axios.get('/api/tProductController.do', {
-          dictType: this.type,
-          page: this.page,
-          rows: this.rows,
-          departid: '8a8ab0b246dc81120146dc8180a20016',
-          productStatus: 1,
-          field: 'dictType,id,productName,discount,price,discountPrice,inventory,speciDetail.images'
+        axios.get('/api/tProductController.do?dotagrid', {
+          params: {
+            dictType: this.type,
+            page: this.page,
+            rows: this.rows,
+            departid: '8a8ab0b246dc81120146dc8180a20016',
+            productStatus: 1,
+            field: 'dictType,id,productName,discount,price,discountPrice,inventory,speciDetail.images,speci'
+          }
         })
           .then((res) => {
             this.goods = res.data
             this.$nextTick(() => {
               this._initScroll()
             })
+          })
+          .catch((res) => {
+            console.log(res)
           })
       },
       _initScroll() {
