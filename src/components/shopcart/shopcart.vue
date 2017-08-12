@@ -128,7 +128,8 @@
         if (this.totalPrice === 0) {
           return
         }
-        window.alert(`支付${this.totalPrice}元`)
+        this.$router.push({name: 'payment'})
+        // this.$store.commit('ROUTE_CHANGE', {activeRoute: this.$route.name})
       }
     },
     components: {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import sell from '@/components/sell/sell'
 import chating from '@/components/chating/chating'
+import payment from '@/components/payment/payment'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/chating',
       name: 'chating',
       component: chating
+    },
+    {
+      path: '/payment',
+      name: 'payment',
+      component: payment
     }
   ]
 })

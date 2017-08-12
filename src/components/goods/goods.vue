@@ -30,7 +30,7 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper" ref="foodswrapper" id="wrapper">
+    <div class="foods-wrapper" ref="foodswrapper">
       <div>
       <h1 class="title">{{typename}}</h1>
       <ul>
@@ -47,19 +47,6 @@
             </div>
             <div class="cartcontrol-wrapper">
               <cartcontrol :item="item"></cartcontrol>
-            </div>
-          </div>
-        </li>
-        <li v-for="item in goods" class="food-item">
-          <div class="icon">
-            <img width="70" height="70" :src=item.speciDetail.images>
-          </div>
-          <div class="content">
-            <h2 class="name">{{item.productName}}</h2>
-            <p class="desc">100ml</p>
-            <div class="price">
-              <span class="now">￥{{item.price}}</span>
-              <span class="old" v-show="item.discount">￥{{item.discountPrice}}</span>
             </div>
           </div>
         </li>
@@ -87,7 +74,6 @@
       }
     },
     created() {
-      console.log('create')
       this.go(0)
     },
     mounted() {
@@ -146,7 +132,6 @@
           })
       },
       _initScroll() {
-        // this.foodsScroll = new BScroll(document.getElementById('wrapper'), {})
         this.foodsScroll = new BScroll(this.$refs.foodswrapper, {
           click: true
         })
