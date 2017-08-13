@@ -7,28 +7,17 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   data() {
     return {
-      gender: null
     }
+  },
+  created() {
   },
   mounted() {
     // this.getCompanyInfo()
   },
   methods: {
-    getCompanyInfo() {
-      axios.post('/api/tSeatController.do?Update', {
-        seat: 8,
-        departId: '8a8ab0b246dc81120146dc8180a20016',
-        sex: 0
-      }).then((res) => {
-        res = res.body
-        // console.log(res)
-      })
-    }
   }
 }
 </script>

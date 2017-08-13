@@ -10,7 +10,7 @@
       <ul>
         <li class="bor-1px list-item" v-for="item in shopCar">
           <div class="left">
-            <img src=""  width="70" height="70">
+            <img src="" width="70" height="70">
             <div class="ct">
               <div class="title">{{item.productName}}</div>
               <div class="desc">{{item.speci}}</div>
@@ -65,11 +65,13 @@
         })
       },
       getShopCar() {
-        axios.get('/api/tOrderDetailController.do', {
-          orderId: 1,
-          page: 1,
-          row: 8,
-          field: 'id,productName,speci,images,number'
+        axios.get('/api/tOrderDetailController.do?getShopCar', {
+          params: {
+            orderId: 1,
+            page: 1,
+            row: 8,
+            field: 'id,productName,speci,images,number'
+          }
         }).then((res) => {
           this.shopCar = (res.data)
           this.$nextTick(() => {

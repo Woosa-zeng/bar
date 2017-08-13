@@ -234,12 +234,14 @@
         border-bottom: 1px solid rgba(7, 17, 27, 0.1);
         .title {
           float: left;
-          font-size: 10px;
+          font-size: 14px;
           color: rgb(7, 17, 27);
         }
         .empty {
           float: right;
-          font-size: 12px;
+          padding-left: 8px;
+          padding-right: 8px;
+          font-size: 14px;
           color: rgb(0, 160, 220);
         }
       }

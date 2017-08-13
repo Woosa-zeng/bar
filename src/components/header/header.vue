@@ -9,7 +9,7 @@
           <span>欢迎您的光临！</span>
         </div>
       </div>
-      <div class="userInfo" @click="changeName">
+      <div class="userInfo" @click="changeNameLayer">
         <i v-if="ismale" class="icon-male iconfont"></i>
         <i v-else class="icon-female iconfont"></i>
         <span class="userName">{{nickname}}</span>
@@ -37,8 +37,8 @@
       </div>
       <div class="modal"></div>
     </div>
-    <div class="msg-name msg-box-wrapper" :class="{hide: cName}" @click.self="closeCnameFlag">
-      <div class="msg-box" @click.self.prevent="closeCnameFlag">
+    <div class="msg-name msg-box-wrapper" :class="{hide: changeName}" @click.self="closeChangenameFlag">
+      <div class="msg-box" @click.self.prevent="closeChangenameFlag">
         <div class="msg-box-header">呢称</div>
         <div class="msg-box-content">
           <input :value="nickname" class="c-nikename" maxlength="8" ref="nicknamebox">
@@ -49,66 +49,99 @@
         </div>
       </div>
     </div>
-    <div class="msk-c" :class="{hide: cName}" ></div>
+    <div class="msk-c" :class="{hide: changeName}" ></div>
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data() {
       return {
         gender: '',
         ismale: true,
         isfemale: false,
-        genderflag: window.localStorage.getItem('genderflag'),
-        cName: true,
-        nickname: '18号桌'
+        genderflag: this.$store.state.genderFlag,
+        changeName: true,
+        nickname: this.$store.state.nickname || this.$store.state.selfSeat,
+        userInfo: {
+          cId: 1,
+          cName: 'xxbar',
+          seat: 11
+        }
       }
     },
     created() {
-      console.log(this.genderflag)
+      this.getInfo()
+      console.log('created==' + this.genderflag)
     },
     watch: {
       gender() {
-        console.log(this.ismale)
+        console.log('watch==' + this.ismale)
       }
     },
     computed: {
-      selGender() {
-        if (this.gender === 'female') {
-          console.log('female')
-        } else {
-          console.log('male')
-        }
-      }
     },
     methods: {
+      // 扫描存储用户信息
+      getInfo() {
+        axios.get('/index.html').then((res) => {
+          // console.log(res)
+          if (res) {
+            this.userInfo = res
+            this.$store.commit('SELF_SEAT', {selfSeat: res.seat})
+            this.$store.commit('COMPANY_NAME', {companyName: res.cName})
+            this.$store.commit('COMPANY_ID', {companyId: res.cId})
+          }
+        })
+      },
+      // 保存修改昵称
       saveNewName() {
         this.nickname = this.$refs.nicknamebox.value
-        this.closeCnameFlag()
+        this.$store.commit('NICKNAME', {nickname: this.$refs.nicknamebox.value})
+        this.closeChangenameFlag()
       },
+      // 取消修改昵称
       cancelNewName() {
         this.$refs.nicknamebox.value = this.nickname
-        this.closeCnameFlag()
+        this.closeChangenameFlag()
       },
-      closeCnameFlag() {
-        this.cName = true
+      // 打开切换昵称层
+      closeChangenameFlag() {
+        this.changeName = true
       },
-      changeName() {
-        this.cName = false
+      // 关闭切换昵称层
+      changeNameLayer() {
+        this.changeName = false
       },
+      // 入口选择性别
       changeGender(val) {
         this.gender = val
+        // let id = 0
         if (val === 'male') {
           this.ismale = true
           this.isfemale = false
+          // id = 0
         } else {
           this.ismale = false
           this.isfemale = true
+          // id = 1
         }
+        // this.saveGender(id)
         setTimeout(() => {
           this.genderflag = true
-          window.localStorage.setItem('genderflag', true)
+          this.$store.commit('GENDER_FLAG', {genderFlag: true})
+          // window.localStorage.setItem('genderflag', true)
         }, 1000)
+      },
+      // 保存用户性别
+      saveGender(id) {
+        axios.post('/api/tSeatController?doUpdate', {
+          seat: 1,
+          departId: 1,
+          sex: id
+        }).then((res) => {
+          console.log(res)
+        })
       }
     }
   }

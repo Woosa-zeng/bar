@@ -25,7 +25,7 @@
         if (!event._constructed) {
           return
         }
-        axios.post('/api/tOrderDetailController.do?addShopCart', {
+        axios.post('/api/tOrderDetailController.do', {
           proId: this.item.id,
           number: 1,
           seatNumber: 11,
@@ -37,6 +37,13 @@
           } else {
             this.item.count++
           }
+//          if (res.success) {
+//          } else {
+//            this.$message({
+//              type: 'error',
+//              message: res.msg
+//            })
+//          }
         }).catch((error) => {
           console.log(error)
           this.$message({

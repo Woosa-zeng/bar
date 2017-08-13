@@ -34,7 +34,7 @@
         myAvatar: '',
         chatMsg: [
           {
-            msg: 'hello I am andy,bala……,hello I am andy,bala……',
+            msg: 'I am andy,bala……,hello I am andy,bala……',
             createDate: '12:31',
             sendSeat: 11
           },
@@ -113,14 +113,14 @@
         let time = new Date()
         let m = time.getHours()
         let s = time.getMinutes()
-        console.log('type' + typeof s)
-        if (m.length < 10) {
+        // console.log('type' + typeof s)
+        if (m < 10) {
           m = '0' + m
         }
-        if (s.length < 10) {
+        if (s < 10) {
           s = '0' + s
         }
-        console.log(s)
+        console.log('type' + typeof s)
         let _time = `${m}: ${s}`
         return _time
       }
