@@ -27,6 +27,10 @@
         isActive: [true, false]
       }
     },
+    created() {
+      // this.$router.push({name: 'goods'})
+      // this.$store.commit('ROUTE_CHANGE', {activeRoute: 'goods'})
+    },
     mounted() {
       this.setActiveNav()
     },

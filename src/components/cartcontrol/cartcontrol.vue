@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="cartcontrol">
-    <div class="cart-decrease" v-show="item.count>0" @click="decreaseCart">
+    <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
       <i class="icon-jian iconfont"></i>
     </div>
-    <div class="cart-count" v-show="item.count>0">{{item.count}}</div>
+    <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <div class="cart-add" @click="addCart">
       <i class="icon-add iconfont"></i>
     </div>
@@ -14,7 +14,7 @@
   import axios from 'axios'
   export default {
     props: {
-      item: {
+      food: {
         type: Object
       }
     },
@@ -26,16 +26,16 @@
           return
         }
         axios.post('/api/tOrderDetailController.do', {
-          proId: this.item.id,
+          proId: this.food.id,
           number: 1,
           seatNumber: 11,
           dapartid: 12312
         }).then((res) => {
           console.log(res)
-          if (!this.item.count) {
-            Vue.set(this.item, 'count', 1)
+          if (!this.food.count) {
+            Vue.set(this.food, 'count', 1)
           } else {
-            this.item.count++
+            this.food.count++
           }
 //          if (res.success) {
 //          } else {
@@ -56,8 +56,8 @@
         if (!event._constructed) {
           return
         }
-        if (this.item.count) {
-          this.item.count--
+        if (this.food.count) {
+          this.food.count--
         }
       }
     }

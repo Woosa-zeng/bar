@@ -1,57 +1,41 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menuwrapper">
       <ul>
-        <li class="menu-item"
-            @click="go(0)"
-            :class="{'cur': cur[0]}">
+        <li class="menu-item" v-for="(item, index) in goods"
+            :class="{'cur': currentIndex === index}"
+            @click="selectMenu(index)">
           <span class="text">
-            <i class="icon-fire iconfont"></i>
-            热销
-          </span>
-        </li>
-        <li class="menu-item" @click="go(1)"
-            :class="{'cur': cur[1]}">
-          <span class="text">
-            酒水
-          </span>
-        </li>
-        <li class="menu-item" @click="go(2)"
-            :class="{'cur': cur[2]}">
-          <span class="text">
-            饮料
-          </span>
-        </li>
-        <li class="menu-item" @click="go(3)"
-            :class="{'cur': cur[3]}">
-          <span class="text">
-            零食
+            <span v-show="item.dictType = 0"><i class="icon-fire iconfont"></i></span>
+            {{item.dictTypeName}}
           </span>
         </li>
       </ul>
     </div>
     <div class="foods-wrapper" ref="foodswrapper">
-      <div>
-      <h1 class="title">{{typename}}</h1>
       <ul>
-        <li v-for="item in goods" class="food-item">
-          <div class="icon">
-            <img width="70" height="70" :src=item.speciDetail.images>
-          </div>
-          <div class="content">
-            <h2 class="name">{{item.productName}}</h2>
-            <p class="desc">{{item.speci}}</p>
-            <div class="price">
-              <span class="now">￥{{item.price}}</span>
-              <span class="old" v-show="item.discount">￥{{item.discountPrice}}</span>
-            </div>
-            <div class="cartcontrol-wrapper">
-              <cartcontrol :item="item"></cartcontrol>
-            </div>
-          </div>
+        <li v-for="food in goods" class="food-list food-list-hook">
+          <h1 class="title">{{item.dictTypeName}}</h1>
+          <ul>
+            <li v-for="food in item.productList" class="food-item">
+              <div class="icon">
+                <img width="70" height="70" :src=food.speciDetail.images>
+              </div>
+              <div class="content">
+                <h2 class="name">{{food.productName}}</h2>
+                <p class="desc">{{food.speci}}</p>
+                <div class="price">
+                  <span class="now">￥{{food.price}}</span>
+                  <span class="old" v-show="food.discount">￥{{food.discountPrice}}</span>
+                </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
+              </div>
+            </li>
+          </ul>
         </li>
       </ul>
-      </div>
     </div>
     <shopcart :select-foods="selectFoods"></shopcart>
   </div>
@@ -66,6 +50,8 @@
     data() {
       return {
         goods: [],
+        listHeight: [],
+        scrollY: 0,
         cur: [true, false, false, false],
         typename: '热销',
         type: 0,
@@ -74,72 +60,77 @@
       }
     },
     created() {
-      this.go(0)
+      axios.get('/api/tProductController.do?dotagrid', {
+//        params: {
+//          dictType: this.type,
+//          page: this.page,
+//          rows: this.rows,
+//          departid: '8a8ab0b246dc81120146dc8180a20016',
+//          productStatus: 1,
+//          field: 'dictType,id,productName,discount,price,discountPrice,inventory,speciDetail.images,speci'
+//        }
+      })
+        .then((res) => {
+          // this.goods = res.data
+          this.$nextTick(() => {
+            this._initScroll()
+            this._calculateHeight()
+          })
+        })
+        .catch((res) => {
+          console.log(res)
+        })
     },
     mounted() {
     },
     computed: {
       selectFoods() {
         let foods = []
-        this.goods.forEach((food) => {
-          if (food.count) {
-            foods.push(food)
-          }
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food)
+            }
+          })
         })
         return foods
+      },
+      currentIndex() {
+        for (let i = 0; i < this.listHeight; i++) {
+          let height1 = this.listHeight[i]
+          let height2 = this.listHeight[i + 1]
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+            return i
+          }
+        }
+        return 0
       }
     },
     methods: {
-      setCur() {
-        this.cur = [false, false, false, false]
-        this.cur[this.type] = true
-        this.getInfo(this.type)
-      },
-      go(index) {
-        switch (index) {
-          case 0:
-            this.type = 0
-            this.setCur()
-            break
-          case 1:
-            this.type = 1
-            this.setCur()
-            break
-          case 2:
-            this.type = 2
-            this.setCur()
-            break
-          case 3:
-            this.type = 3
-            this.setCur()
-            break
-        }
-      },
-      getInfo() {
-        axios.get('/api/tProductController.do?dotagrid', {
-          params: {
-            dictType: this.type,
-            page: this.page,
-            rows: this.rows,
-            departid: '8a8ab0b246dc81120146dc8180a20016',
-            productStatus: 1,
-            field: 'dictType,id,productName,discount,price,discountPrice,inventory,speciDetail.images,speci'
-          }
-        })
-          .then((res) => {
-            this.goods = res.data
-            this.$nextTick(() => {
-              this._initScroll()
-            })
-          })
-          .catch((res) => {
-            console.log(res)
-          })
+      selectMenu(index) {
+        console.log(index)
+        let foodList = this.$refs.foodswrapper.getElementsByClassName('food-list-hook')
+        let el = foodList[index]
+        this.foodsScroll.scrollToElement(el, 300)
       },
       _initScroll() {
         this.foodsScroll = new BScroll(this.$refs.foodswrapper, {
+          probeType: 3,
           click: true
         })
+        this.foodsScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y))
+        })
+      },
+      _calculateHeight() {
+        let foodList = this.$refs.foodswrapper.getElementsByClassName('food-list-hook')
+        let height = 0
+        this.listHeight.push(height)
+        for (let i = 0; i < foodList.length; i++) {
+          let item = foodList[i]
+          height += item.clientHeight
+          this.listHeight.push(height)
+        }
       }
     },
     components: {
