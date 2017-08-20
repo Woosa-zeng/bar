@@ -25,6 +25,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import BScroll from 'better-scroll'
+  import qs from 'qs'
   export default {
     data() {
       return {
@@ -48,18 +49,18 @@
       }
     },
     beforeDestroy() {
-      console.log(222)
       window.clearInterval(this.getCurMsg)
     },
     created() {
       this.getChatingDetail()
 //      this.getCurMsg = setInterval(() => {
 //        axios.get('/api/tChatController.do?getNewMsg', {params: {
-//          departId: 1,
-//          sendSeat: 22,
-//          receiveSeat: 1
+//          departId: this.$store.state.companyId,
+//          sendSeat: this.$store.state.chatId,
+//          receiveSeat: this.$store.state.userId
 //        }}).then((res) => {
 //          console.log(res)
+//          this.chatMsg.push(res.data)
 //        })
 //      }, 3000)
     },
@@ -99,12 +100,12 @@
           this._initScroll()
         })
         this.$refs.iptmsg.value = ''
-        axios.post('/api/tChatController.do?doAdd', {
+        axios.post('/api/tChatController.do?doAdd', qs.stringify({
           msg: val,
-          departId: 1,
-          sendSeat: 1,
-          receiveSeat: 11
-        }).then((res) => {
+          departId: this.$store.state.companyId,
+          sendSeat: this.$store.state.userId,
+          receiveSeat: this.$store.state.chatId
+        })).then((res) => {
           console.log(res)
         })
         console.log(val)
@@ -112,13 +113,15 @@
       getChatingDetail() {
         axios.get('/api/tChatController?datagrid', {
           params: {
-            departId: 1,
-            sendSeat: 12,
-            receiveSeat: 11,
+            page: 1,
+            rows: 20,
+            departId: this.$store.state.companyId,
+            sendSeat: this.$store.state.chatId,
+            receiveSeat: this.$store.state.userId,
             field: 'departId,sendSeat,receiveSeat,msg,createDate'
           }
         }).then((res) => {
-          console.log(res)
+          console.log(res.data)
           this.$nextTick(() => {
             this._initScroll()
           })

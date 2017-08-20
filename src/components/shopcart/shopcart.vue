@@ -152,7 +152,6 @@
 </script>
 <style lang="less" rel="stylesheet/less">
   @import "../../common/less/mixin.less";
-
   .shopcart{
     position: fixed;
     left: 0;
@@ -160,7 +159,7 @@
     z-index: 50;
     width: 100%;
     height: 48px;
-    .content{
+  .content{
       display: flex;
       background:#201e34;
       .ct-left{
@@ -232,7 +231,7 @@
       top: 0;
       z-index: -1;
       width: 100%;
-      transition: all 1s;
+      transition: all 0.5s;
       transform: translate3d(0, -100%, 0);
       .list-header{
         height: 40px;

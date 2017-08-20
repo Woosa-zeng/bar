@@ -1,23 +1,23 @@
 <template>
   <div class="payment">
     <div class="col">
-      <p class="bor-1px"><span class="title">我的桌号</span> <span class="tr">18</span></p>
+      <p class="bor-1px"><span class="title">我的桌号</span> <span class="tr">{{seat}}</span></p>
     </div>
     <div class="col">
-      <p><span class="title mr20">酒水送往</span><input :value="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号"></p>
+      <p><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" @blur="isNumber"></p>
     </div>
     <div class="goods-content mt20" ref="shopcarwrapper">
       <ul>
         <li class="bor-1px list-item" v-for="item in shopCar">
           <div class="left">
-            <img src="" width="70" height="70">
+            <img :src="imgurl+item.images" width="70" height="70">
             <div class="ct">
               <div class="title">{{item.productName}}</div>
               <div class="desc">{{item.speci}}</div>
             </div>
           </div>
           <div class="right">
-            <div class="price">¥&nbsp{{item.amount}} &nbsp*&nbsp {{item.number}}</div>
+            <div class="price">¥&nbsp{{item.price}} &nbsp*&nbsp {{item.number}}</div>
           </div>
         </li>
       </ul>
@@ -28,9 +28,9 @@
     <div class="vfooter">
       <div class="content">
         <div class="footer-left">
-          <p>¥800.00</p>
+          <p>¥{{amount}}</p>
         </div>
-        <div class="footer-right" @click="pay(2)">
+        <div class="footer-right" @click="pay">
           <div class="pay">确认付款</div>
         </div>
       </div>
@@ -62,20 +62,36 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import BScroll from 'better-scroll'
+  import qs from 'qs'
   export default {
     data() {
       return {
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        seat: this.$store.state.selfSeat,
         sentSomeone: '',
         shopCar: [],
         show: false,
         payment: '微信支付',
-        paymentFlag: 0
+        paymentFlag: 0,
+        amount: ''
       }
     },
     created() {
       this.getShopCar()
     },
     methods: {
+      isNumber() {
+        let val = this.sentSomeone
+        val = val - 0
+        if (val > 0) {
+          console.log(typeof val)
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请输入数字！'
+          })
+        }
+      },
       changePayment(val) {
         this.paymentFlag = val
         if (val === 0) {
@@ -87,32 +103,51 @@
           this.show = false
         }, 800)
       },
-      pay(type) {
-        axios.post('/api/tOrderController.do?pay', {
-          id: 1,
-          payType: type,
-          giveSeatNumber: 18
-        }).then((res) => {
-          console.log(res)
-          this.$message({
-            type: 'success',
-            message: 'ok'
-          })
+      pay() {
+        axios.post('/api/tOrderController.do?pay', qs.stringify({
+          id: this.$store.state.orderId,
+          payType: this.paymentFlag,
+          giveSeatNumber: this.sentSomeone
+        })).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              type: 'success',
+              message: '支付成功，即将返回！'
+            })
+            setTimeout(() => {
+              this.$router.push('goods')
+            }, 1500)
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            })
+          }
         })
       },
       getShopCar() {
         axios.get('/api/tOrderDetailController.do?getShopCar', {
           params: {
-            orderId: 1,
+            orderId: this.$store.state.orderId,
             page: 1,
             row: 8,
-            field: 'id,productName,speci,images,number'
+            field: 'id,productName,speci,amount,number,price,images'
           }
         }).then((res) => {
-          this.shopCar = (res.data)
-          this.$nextTick(() => {
-            this.initScroll()
-          })
+          res = res.data.rows
+          let num = 0
+          if (res) {
+            this.shopCar = (res)
+            this.amount = res
+            for (let i = 0; i < res.length; i++) {
+              num += res[i].amount
+            }
+            this.amount = num
+            this.$nextTick(() => {
+              this.initScroll()
+            })
+          }
+          console.log(this.shopCar)
         })
       },
       initScroll() {
@@ -215,6 +250,13 @@
       .list-item{
         display: flex;
         padding: 10px 0;
+        .left{
+          img{
+            display: inline-block;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+          }
+        }
         .left,.right{
           flex: 1;
         }

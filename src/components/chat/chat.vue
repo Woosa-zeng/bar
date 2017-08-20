@@ -2,44 +2,24 @@
   <div class="chat">
     <div class="list-wrapper" ref="listwrapper">
       <ul>
-        <li @click="goChating" class="list-item">
+        <li @click="goChating(item.id)" class="list-item" v-for="item in listItem">
           <div class="left">
-            <img src="../../assets/avatar.jpeg" alt="" width="60" height="60">
+            <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
               <div class="title">
-                10号桌
+                {{item.nickName}}
                 <div class="icon" :class="{r40: ismale}">
-                  <i v-if="ismale" class="icon-male iconfont"></i>
+                  <i v-if="item.sex > 0" class="icon-male iconfont"></i>
                   <i v-else class="icon-female iconfont"></i>
                 </div>
               </div>
               <div class="msg">
-                hello~
+                {{item.msgs}}
               </div>
             </div>
           </div>
-          <div class="right">
-            <div class="time">12:00</div>
-            <div class="icon"></div>
-          </div>
-        </li>
-        <li @click="goChating" class="list-item">
-          <div class="left">
-            <img src="../../assets/avatar.jpeg" alt="" width="60" height="60">
-            <div class="ct">
-              <div class="title">
-                10号桌
-                <div class="icon">
-                  <i class="icon-female iconfont"></i>
-                </div>
-              </div>
-              <div class="msg">
-                hello~
-              </div>
-            </div>
-          </div>
-          <div class="right">
-            <div class="time">12:00</div>
+          <div class="right" v-if="item.msgs">
+            <div class="time">{{item.msgs.createDate}}</div>
             <div class="icon"></div>
           </div>
         </li>
@@ -53,9 +33,8 @@
   export default {
     data() {
       return {
-        listItem: {
-          imgs: '../../assets/logo.png'
-        },
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        listItem: [],
         ismale: true
       }
     },
@@ -68,12 +47,13 @@
           params: {
             page: 1,
             rows: 10,
-            departId: 112,
-            currentSeat: 11,
-            field: 'seat,sex,images,msgs'
+            departId: this.$store.state.companyId,
+            currentId: this.$store.state.userId,
+            field: 'seat,sex,images,msgs,id'
           }
         }).then((res) => {
-          console.log(res)
+          this.listItem = res.data.rows
+          console.log(res.data.rows)
           this.$nextTick(() => {
             this._initScroll()
           })
@@ -86,7 +66,9 @@
           click: true
         })
       },
-      goChating() {
+      goChating(id) {
+        console.log('id===' + id)
+        this.$store.commit('CHAT_ID', {'chatId': id})
         this.$router.push({name: 'chating'})
       }
     }
@@ -95,13 +77,23 @@
 <style lang="less" rel="stylesheet/less">
   @import "../../common/less/mixin.less";
   .chat{
-    padding: 10px;
+    display: flex;
+    position: absolute;
+    top: 138px;
+    bottom:1px;
+    width: 100%;
+    overflow: hidden;
+    .list-wrapper{
+      width: 100%;
+    }
     .list-item{
       display: flex;
-      padding: 10px;
+      width:100%;
+      overflow: hidden;
       margin-bottom: 10px;
       .left{
         flex: 1;
+        padding:10px;
       }
       .right{
         flex: 0 0 80px;

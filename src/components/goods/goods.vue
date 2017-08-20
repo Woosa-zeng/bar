@@ -19,7 +19,7 @@
           <ul>
             <li v-for="food in item.productList" class="food-item">
               <div class="icon">
-                <img width="70" height="70" :src=imgrul+food.speciDetail.images>
+                <img width="70" height="70" :src=imgurl+food.speciDetail.images>
               </div>
               <div class="content">
                 <h2 class="name">{{food.productName}}</h2>
@@ -50,7 +50,7 @@
   export default {
     data() {
       return {
-        imgrul: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         goods: [],
         listHeight: [],
         scrollY: 0

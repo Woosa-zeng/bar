@@ -12,7 +12,7 @@ const store = new Vuex.Store({
     companyId: '402880e447e99cf10147e9a03b320003',
     companyName: null,
     selfSeat: 1,
-    chatSate: null,
+    chatId: null,
     nickname: null,
     orderId: ''
   },
@@ -38,8 +38,8 @@ const store = new Vuex.Store({
     [type.SELF_SEAT](state, payload) {
       state.selfSeat = payload.selfSeat
     },
-    [type.CHAT_SEAT](state, payload) {
-      state.chatSate = payload.chatSate
+    [type.CHAT_ID](state, payload) {
+      state.chatId = payload.chatId
     },
     [type.NICKNAME](state, payload) {
       state.nickname = payload.nickname
