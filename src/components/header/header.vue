@@ -54,6 +54,7 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import qs from 'qs'
   export default {
     data() {
       return {
@@ -82,22 +83,32 @@
     computed: {
     },
     methods: {
-      // 扫描存储用户信息
       getInfo() {
+        // 扫描存储用户信息
         axios.get('/index.html').then((res) => {
-          // console.log(res)
-          if (res) {
-            this.userInfo = res
-            this.$store.commit('SELF_SEAT', {selfSeat: res.seat})
-            this.$store.commit('COMPANY_NAME', {companyName: res.cName})
-            this.$store.commit('COMPANY_ID', {companyId: res.cId})
-          }
+          console.log(res)
+//      if (res) {
+//        this.userInfo = res
+//        this.$store.commit('SELF_SEAT', {selfSeat: res.seat})
+//        this.$store.commit('COMPANY_NAME', {companyName: res.cName})
+//        this.$store.commit('COMPANY_ID', {companyId: res.departId})
+//      } else {
+//        this.$message({
+//          type: 'error',
+//          message: '参数错误，请重新扫描!'
+//        })
+//      }
         })
       },
       // 保存修改昵称
       saveNewName() {
-        this.nickname = this.$refs.nicknamebox.value
-        this.$store.commit('NICKNAME', {nickname: this.$refs.nicknamebox.value})
+        let newName = this.$refs.nicknamebox.value
+        axios.post('api/tChatUserController.do?doUpdate', qs.stringify({
+          Id: this.$store.state.userId,
+          nickName: newName
+        }))
+        this.nickname = newName
+        this.$store.commit('NICKNAME', {nickname: newName})
         this.closeChangenameFlag()
       },
       // 取消修改昵称
@@ -120,10 +131,14 @@
         if (val === 'male') {
           this.ismale = true
           this.isfemale = false
+          this.$store.commit('SEX', {sex: 0})
+          this.selectSex()
           // id = 0
         } else {
           this.ismale = false
           this.isfemale = true
+          this.$store.commit('SEX', {sex: 1})
+          this.selectSex()
           // id = 1
         }
         // this.saveGender(id)
@@ -133,14 +148,15 @@
           // window.localStorage.setItem('genderflag', true)
         }, 1000)
       },
-      // 保存用户性别
-      saveGender(id) {
-        axios.post('/api/tSeatController?doUpdate', {
-          seat: 1,
-          departId: 1,
-          sex: id
-        }).then((res) => {
-          console.log(res)
+      selectSex(val) {
+        axios.post('/api/tChatUserController.do?doAdd', qs.stringify({
+          departId: this.$store.state.companyId,
+          seat: this.$store.state.selfSeat,
+          sex: this.$store.state.sex
+        })).then(res => {
+          console.log(typeof res.data)
+          this.$store.commit('USER_ID', {userId: res.data})
+          console.log(this.$store.state.userId)
         })
       }
     }

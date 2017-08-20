@@ -12,7 +12,12 @@
 <script type="text/ecmascript-6">
   import Vue from 'vue'
   import axios from 'axios'
+  import qs from 'qs'
   export default {
+    data() {
+      return {
+      }
+    },
     props: {
       food: {
         type: Object
@@ -25,25 +30,27 @@
         if (!event._constructed) {
           return
         }
-        axios.post('/api/tOrderDetailController.do', {
+        axios.post('/api/tOrderDetailController.do?addShopCart', qs.stringify({
+          orderId: this.$store.state.orderId,
           proId: this.food.id,
           number: 1,
-          seatNumber: 11,
-          dapartid: 12312
-        }).then((res) => {
+          seatNumber: 1,
+          dapartid: this.$store.state.companyId
+        })).then((res) => {
           console.log(res)
-          if (!this.food.count) {
-            Vue.set(this.food, 'count', 1)
+          if (res.data.success) {
+            this.$store.commit('ORDER_ID', {orderId: res.data.obj})
+            if (!this.food.count) {
+              Vue.set(this.food, 'count', 1)
+            } else {
+              this.food.count++
+            }
           } else {
-            this.food.count++
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            })
           }
-//          if (res.success) {
-//          } else {
-//            this.$message({
-//              type: 'error',
-//              message: res.msg
-//            })
-//          }
         }).catch((error) => {
           console.log(error)
           this.$message({

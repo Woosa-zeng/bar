@@ -23,7 +23,7 @@
       </ul>
     </div>
     <div class="col pay-online mt20">
-      <p><span class="title">支付方式</span><span class="tr">在线支付</span></p>
+      <p><span class="title">支付方式</span><span class="fr goChangePayment" @click="show=!show">{{payment}}</span></p>
     </div>
     <div class="vfooter">
       <div class="content">
@@ -35,6 +35,28 @@
         </div>
       </div>
     </div>
+    <div class="payment-mask" v-if="show"></div>
+    <transition name="fold">
+      <div class="selectPayment" v-if="show">
+        <div class="paymentHeader">选择付款方式</div>
+        <ul>
+          <li class="payment-item" @click="changePayment(0)">
+            <div>
+              <img src="./icon_wx.png" alt="" width="30" height="30">
+              <span>微信支付</span>
+              <img src="./icon_gouxuan.png" alt="" width="20" height="20" :class="{cur: paymentFlag===0}" class="hide">
+            </div>
+          </li>
+          <li class="payment-item" @click="changePayment(1)">
+            <div>
+            <img src="./icon_xx.png" alt="" width="30" height="30">
+            <span>线下支付</span>
+            <img src="./icon_gouxuan.png" alt="" width="20" height="20" :class="{cur: paymentFlag===1}" class="hide">
+            </div>
+          </li>
+        </ul>
+      </div>
+    </transition>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -44,13 +66,27 @@
     data() {
       return {
         sentSomeone: '',
-        shopCar: []
+        shopCar: [],
+        show: false,
+        payment: '微信支付',
+        paymentFlag: 0
       }
     },
     created() {
       this.getShopCar()
     },
     methods: {
+      changePayment(val) {
+        this.paymentFlag = val
+        if (val === 0) {
+          this.payment = '微信支付'
+        } else {
+          this.payment = '在线支付'
+        }
+        setTimeout(() => {
+          this.show = false
+        }, 800)
+      },
       pay(type) {
         axios.post('/api/tOrderController.do?pay', {
           id: 1,
@@ -89,6 +125,67 @@
 </script>
 <style lang="less" rel="stylesheet/less">
   @import "../../common/less/mixin.less";
+  .hide{
+    display: none;
+  }
+  .goChangePayment{
+    &:after{
+      display: inline-block;
+      content: "";
+       width: 8px;
+       height: 13px;
+       background: url('./icon_gengduo.png') no-repeat;
+       background-size: cover;
+       vertical-align: middle;
+       margin-left: 10px;
+     }
+  }
+  .payment-mask{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height:100%;
+    background: #000;
+    opacity: 0.5;
+    z-index:8888;
+    backdrop-filter: blur(10px);
+  }
+  .selectPayment{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 160px;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
+    .paymentHeader{
+      font-size: 16px;
+      line-height: 40px;
+      text-align: center;
+      .border-1px;
+    }
+    .payment-item{
+      height: 60px;
+      line-height: 60px;
+      width:100%;
+      span, img{
+        vertical-align: middle;
+      }
+      img{
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+      .cur{
+        float: right;
+        margin-top: 20px;
+        display: block;
+      }
+      &:nth-child(1){
+        .border-1px;
+       }
+    }
+  }
   .payment{
     position: absolute;
     background: #eee;
@@ -151,7 +248,7 @@
       p{
         margin-left: 20px;
         margin-right: 20px;
-        .tr{
+        .fr{
           float: right;
         }
       }

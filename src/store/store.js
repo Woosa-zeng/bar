@@ -5,17 +5,26 @@ import * as type from './type.js'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
+    userId: '',
     genderFlag: false,
+    sex: null,
     activeRoute: 'goods',
-    companyId: null,
+    companyId: '402880e447e99cf10147e9a03b320003',
     companyName: null,
-    selfSeat: '8号桌',
+    selfSeat: 1,
     chatSate: null,
-    nickname: null
+    nickname: null,
+    orderId: ''
   },
   mutations: {
+    [type.USER_ID](state, payload) {
+      state.userId = payload.userId
+    },
     [type.GENDER_FLAG](state, payload) {
       state.genderFlag = payload.genderFlag
+    },
+    [type.SEX](state, payload) {
+      state.sex = payload.sex
     },
     [type.ROUTE_CHANGE](state, payload) {
       state.activeRoute = payload.activeRoute
@@ -34,6 +43,9 @@ const store = new Vuex.Store({
     },
     [type.NICKNAME](state, payload) {
       state.nickname = payload.nickname
+    },
+    [type.ORDER_ID](state, payload) {
+      state.orderId = payload.orderId
     }
   }
 })

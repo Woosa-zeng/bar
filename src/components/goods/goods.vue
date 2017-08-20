@@ -6,7 +6,7 @@
             :class="{'cur': currentIndex === index}"
             @click="selectMenu(index)">
           <span class="text">
-            <span v-show="item.dictType = 0"><i class="icon-fire iconfont"></i></span>
+            <span v-show="item.dictType < 1 "><i class="icon-fire iconfont"></i></span>
             {{item.dictTypeName}}
           </span>
         </li>
@@ -14,19 +14,19 @@
     </div>
     <div class="foods-wrapper" ref="foodswrapper">
       <ul>
-        <li v-for="food in goods" class="food-list food-list-hook">
+        <li v-for="item in goods" class="food-list food-list-hook">
           <h1 class="title">{{item.dictTypeName}}</h1>
           <ul>
             <li v-for="food in item.productList" class="food-item">
               <div class="icon">
-                <img width="70" height="70" :src=food.speciDetail.images>
+                <img width="70" height="70" :src=imgrul+food.speciDetail.images>
               </div>
               <div class="content">
                 <h2 class="name">{{food.productName}}</h2>
-                <p class="desc">{{food.speci}}</p>
+                <p class="desc">{{food.speciDetail.dictNameNext}}</p>
                 <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span class="old" v-show="food.discount">￥{{food.discountPrice}}</span>
+                  <span class="now">￥{{food.discount < 1 ? food.discountPrice : food.price}}</span>
+                  <span class="old" v-show="food.discount < 1">￥{{food.discount < 1 ? food.price : food.discountPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food"></cartcontrol>
@@ -45,37 +45,28 @@
   import shopcart from '../shopcart/shopcart'
   import cartcontrol from '../cartcontrol/cartcontrol'
   import BScroll from 'better-scroll'
+  import qs from 'qs'
 
   export default {
     data() {
       return {
+        imgrul: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         goods: [],
         listHeight: [],
-        scrollY: 0,
-        cur: [true, false, false, false],
-        typename: '热销',
-        type: 0,
-        page: 1,
-        rows: 6
+        scrollY: 0
       }
     },
     created() {
-      axios.get('/api/tProductController.do?dotagrid', {
-//        params: {
-//          dictType: this.type,
-//          page: this.page,
-//          rows: this.rows,
-//          departid: '8a8ab0b246dc81120146dc8180a20016',
-//          productStatus: 1,
-//          field: 'dictType,id,productName,discount,price,discountPrice,inventory,speciDetail.images,speci'
-//        }
-      })
+      axios.post('/api/tProductController.do?getListIndex', qs.stringify({
+        departid: this.$store.state.companyId
+      }))
         .then((res) => {
-          // this.goods = res.data
+          this.goods = res.data
           this.$nextTick(() => {
             this._initScroll()
             this._calculateHeight()
           })
+          console.log(this.goods)
         })
         .catch((res) => {
           console.log(res)
@@ -87,7 +78,7 @@
       selectFoods() {
         let foods = []
         this.goods.forEach((good) => {
-          good.foods.forEach((food) => {
+          good.productList.forEach((food) => {
             if (food.count) {
               foods.push(food)
             }
@@ -96,7 +87,7 @@
         return foods
       },
       currentIndex() {
-        for (let i = 0; i < this.listHeight; i++) {
+        for (let i = 0; i < this.listHeight.length; i++) {
           let height1 = this.listHeight[i]
           let height2 = this.listHeight[i + 1]
           if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
@@ -108,7 +99,6 @@
     },
     methods: {
       selectMenu(index) {
-        console.log(index)
         let foodList = this.$refs.foodswrapper.getElementsByClassName('food-list-hook')
         let el = foodList[index]
         this.foodsScroll.scrollToElement(el, 300)
@@ -119,6 +109,7 @@
           click: true
         })
         this.foodsScroll.on('scroll', (pos) => {
+          // console.log(pos.y)
           this.scrollY = Math.abs(Math.round(pos.y))
         })
       },
@@ -198,6 +189,11 @@
         .icon{
           flex: 0 0 70px;
           margin-right: 10px;
+          img{
+            display: block;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+          }
         }
         .content{
           flex: 1;

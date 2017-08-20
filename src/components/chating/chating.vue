@@ -3,7 +3,7 @@
     <div class="seat">
       <span class="goPrev" @click="goPrev"><</span><span class="seatName">{{otherSeat}}</span>
     </div>
-    <div class="msg-wrapper" ref="msgwrapper">
+    <div class="msg-wrapper" :class="{inputFocus: focus}" ref="msgwrapper">
       <ul>
         <li v-for="item in chatMsg" class="msg-item">
           <p class="time" v-if="item.createDate">{{item.createDate}}</p>
@@ -16,8 +16,8 @@
         </li>
       </ul>
     </div>
-    <div class="input-box">
-      <input  ref="iptmsg" maxlength="30">
+    <div class="input-box" id="ipt-box" :class="{inputFocus: focus}">
+      <input ref="iptmsg" maxlength="30" @blur="test" @focus="test2">
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
   </div>
@@ -28,6 +28,7 @@
   export default {
     data() {
       return {
+        focus: false,
         mySeat: 1,
         otherSeat: '11号桌',
         otherAvatar: '',
@@ -52,38 +53,59 @@
     },
     created() {
       this.getChatingDetail()
-      this.getCurMsg = setInterval(() => {
-        axios.get('/api/tChatController.do?getNewMsg', {params: {
-          departId: 1,
-          sendSeat: 22,
-          receiveSeat: 1
-        }}).then((res) => {
-          console.log(res)
-        })
-      }, 3000)
+//      this.getCurMsg = setInterval(() => {
+//        axios.get('/api/tChatController.do?getNewMsg', {params: {
+//          departId: 1,
+//          sendSeat: 22,
+//          receiveSeat: 1
+//        }}).then((res) => {
+//          console.log(res)
+//        })
+//      }, 3000)
     },
     methods: {
+      test2() {
+        this.focus = true
+        this.$nextTick(() => {
+          this._initScroll()
+        })
+        // alert('focus')
+//        let ipt = document.getElementById('ipt-box')
+//        setTimeout(() => {
+//          ipt.scrollIntoViewIfNeeded(true)
+//        }, 100)
+      },
+      test() {
+        console.log('blur')
+        // this.focus = false
+//        this.$nextTick(() => {
+//          this._initScroll()
+//        })
+      },
       goPrev() {
         this.$router.push({name: 'chat'})
         window.clearInterval(this.getCurMsg)
       },
       sendmsg() {
+        this.focus = false
+        console.log('sendmsg')
         let val = this.$refs.iptmsg.value
+        this.chatMsg.push({
+          msg: val,
+          createDate: this._initTime(),
+          sendSeat: 1
+        })
+        this.$nextTick(() => {
+          this._initScroll()
+        })
+        this.$refs.iptmsg.value = ''
         axios.post('/api/tChatController.do?doAdd', {
           msg: val,
           departId: 1,
           sendSeat: 1,
           receiveSeat: 11
         }).then((res) => {
-          this.chatMsg.push({
-            msg: val,
-            createDate: this._initTime(),
-            sendSeat: 1
-          })
-          this.$nextTick(() => {
-            this._initScroll()
-          })
-          this.$refs.iptmsg.value = ''
+          console.log(res)
         })
         console.log(val)
       },
@@ -131,9 +153,8 @@
 <style lang="less" rel="stylesheet/less">
   .input-box{
     position: fixed;
-    display: flex;
     bottom: 0;
-    left: 0;
+    display: flex;
     width: 100%;
     height: 40px;
     input{
@@ -177,7 +198,6 @@
       bottom: 40px;
       width: 100%;
       overflow: hidden;
-      padding-top: 10px;
       background: #eee;
       .msg-item{
         margin: 10px;
@@ -233,5 +253,18 @@
         }
       }
     }
+  }
+  .chating{
+    .msg-wrapper{
+      .inputFocus{
+        position: relative !important;
+        top: 0;
+        bottom: 0;
+      }
+    }
+  }
+  .inputFocus{
+    position: absolute;
+    top: 500px;
   }
 </style>

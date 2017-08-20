@@ -42,6 +42,8 @@
 <script type="text/ecmascript-6">
   import cartcontrol from '../cartcontrol/cartcontrol'
   import BScroll from 'better-scroll'
+  import axios from 'axios'
+  import qs from 'qs'
   export default {
     data() {
       return {
@@ -120,8 +122,19 @@
         this.fold = true
       },
       empty() {
-        this.selectFoods.forEach((food) => {
-          food.count = 0
+        axios.post('api/tOrderDetailController.do?doDelByOrderId', qs.stringify({
+          orderId: this.$store.state.orderId
+        })).then(res => {
+          if (res.data.success) {
+            this.selectFoods.forEach((food) => {
+              food.count = 0
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          }
         })
       },
       pay() {
@@ -139,12 +152,7 @@
 </script>
 <style lang="less" rel="stylesheet/less">
   @import "../../common/less/mixin.less";
-  .fold-enter-active,fold-leave-active {
-    transition: all .5s ease;
-  }
-  .fold-enter, .fold-leave-to{
-    opacity: 0;
-  }
+
   .shopcart{
     position: fixed;
     left: 0;
