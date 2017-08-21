@@ -2,12 +2,12 @@
   <div class="chat">
     <div class="list-wrapper" ref="listwrapper">
       <ul>
-        <li @click="goChating(item.id)" class="list-item" v-for="item in listItem">
+        <li @click="goChating(item.id,item.seat,item.nickname)" class="list-item" v-for="item in listItem">
           <div class="left">
             <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
               <div class="title">
-                {{item.nickName}}
+                {{item.nickName ? item.nickName : item.seat}}
                 <div class="icon" :class="{r40: ismale}">
                   <i v-if="item.sex > 0" class="icon-male iconfont"></i>
                   <i v-else class="icon-female iconfont"></i>
@@ -49,7 +49,7 @@
             rows: 10,
             departId: this.$store.state.companyId,
             currentId: this.$store.state.userId,
-            field: 'seat,sex,images,msgs,id'
+            field: 'seat,sex,images,msgs,id,nickname'
           }
         }).then((res) => {
           this.listItem = res.data.rows
@@ -66,8 +66,10 @@
           click: true
         })
       },
-      goChating(id) {
+      goChating(id, seat, nickname) {
         console.log('id===' + id)
+        console.log('seat===' + seat)
+        console.log('nickname===' + nickname)
         this.$store.commit('CHAT_ID', {'chatId': id})
         this.$router.push({name: 'chating'})
       }

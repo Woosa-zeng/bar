@@ -30,34 +30,13 @@
         if (!event._constructed) {
           return
         }
-        axios.post('/api/tOrderDetailController.do?addShopCart', qs.stringify({
-          orderId: this.$store.state.orderId,
-          proId: this.food.id,
-          number: 1,
-          seatNumber: 1,
-          dapartid: this.$store.state.companyId
-        })).then((res) => {
-          console.log(res)
-          if (res.data.success) {
-            this.$store.commit('ORDER_ID', {orderId: res.data.obj})
-            if (!this.food.count) {
-              Vue.set(this.food, 'count', 1)
-            } else {
-              this.food.count++
-            }
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.data.msg
-            })
-          }
-        }).catch((error) => {
-          console.log(error)
-          this.$message({
-            type: 'error',
-            message: '出错了'
-          })
-        })
+        if (!this.food.count) {
+          Vue.set(this.food, 'count', 1)
+        } else {
+          this.food.count++
+        }
+        console.log('count===' + this.food.count)
+        this.getShopCart(this.food.count)
       },
       decreaseCart(event) {
         if (!event._constructed) {
@@ -65,7 +44,28 @@
         }
         if (this.food.count) {
           this.food.count--
+          this.getShopCart(this.food.count)
         }
+      },
+      getShopCart(count) {
+        axios.post('/api/tOrderDetailController.do?addShopCart', qs.stringify({
+          orderId: this.$store.state.orderId,
+          proId: this.food.id,
+          number: this.food.count,
+          seatNumber: 1,
+          dapartid: this.$store.state.companyId
+        })).then((res) => {
+          console.log(res)
+          if (res.data.success) {
+            this.$store.commit('ORDER_ID', {orderId: res.data.obj})
+          } else {
+            this.food.count--
+            this.$message({
+              type: 'error',
+              message: res.data.msg
+            })
+          }
+        })
       }
     }
   }

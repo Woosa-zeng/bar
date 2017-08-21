@@ -4,8 +4,8 @@
       <span class="goPrev" @click="goPrev"><</span><span class="seatName">{{otherSeat}}</span>
     </div>
     <div class="msg-wrapper" :class="{inputFocus: focus}" ref="msgwrapper">
-      <ul>
-        <li v-for="item in chatMsg" class="msg-item">
+      <ul ref="msgwrapperul">
+        <li v-for="item in chatMsg" class="msg-item clearfix">
           <p class="time" v-if="item.createDate">{{item.createDate}}</p>
           <div class="wrapper" :class="{selfMsg: item.sendSeat == mySeat}">
             <img src="../../assets/avatar.jpeg" alt="" width="50" height="50">
@@ -17,7 +17,8 @@
       </ul>
     </div>
     <div class="input-box" id="ipt-box" :class="{inputFocus: focus}">
-      <input ref="iptmsg" maxlength="30" @blur="test" @focus="test2">
+      <!--<textarea ref="iptmsg" maxlength="30" @blur="test" @focus="test2"></textarea>-->
+      <textarea ref="iptmsg" maxlength="30" resize="none"></textarea>
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
   </div>
@@ -31,7 +32,7 @@
       return {
         focus: false,
         mySeat: 1,
-        otherSeat: '11号桌',
+        otherSeat: '',
         otherAvatar: '',
         myAvatar: '',
         chatMsg: [
@@ -111,7 +112,7 @@
         console.log(val)
       },
       getChatingDetail() {
-        axios.get('/api/tChatController?datagrid', {
+        axios.get('/api/tChatController.do?datagrid', {
           params: {
             page: 1,
             rows: 20,
@@ -133,6 +134,9 @@
         this.msgScroll = new BScroll(this.$refs.msgwrapper, {
           click: true
         })
+        let el = this.$refs.msgwrapperul.lastElementChild
+        console.log(el)
+        this.msgScroll.scrollToElement(el, 400)
       },
       _initTime() {
         let time = new Date()
@@ -154,16 +158,20 @@
   }
 </script>
 <style lang="less" rel="stylesheet/less">
+  @import "../../common/less/mixin.less";
   .input-box{
-    position: fixed;
-    bottom: 0;
     display: flex;
     width: 100%;
     height: 40px;
-    input{
+    textarea{
       flex: 1;
+      box-sizing: border-box;
       height: 40px;
       padding-left: 5px;
+      font-size: 16px;
+      line-height: 30px;
+      outline: none;
+      resize: none;
     }
     .sendmsg{
       flex: 0 0 80px;
@@ -178,6 +186,7 @@
     }
   }
   .chating{
+    height: 100%;
     .seat{
       width: 100%;
       height: 40px;
@@ -196,14 +205,16 @@
       }
     }
     .msg-wrapper{
-      position: absolute;
-      top:40px;
-      bottom: 40px;
       width: 100%;
+      height: 86.5%;
       overflow: hidden;
       background: #eee;
+      ul{
+        padding: 0 20px;
+      }
       .msg-item{
-        margin: 10px;
+        margin: 5px;
+        width: 100%;
         .wrapper{
           img{
             display: inline-block;
@@ -249,7 +260,7 @@
            }
         }
         .time{
-          line-height: 30px;
+          line-height: 20px;
           text-align: center;
           font-size: 13px;
           color: #ccc;
