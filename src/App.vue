@@ -28,6 +28,7 @@ export default {
   font-family: 'PingFang SC', 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #eee;
 }
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity .3s ease;

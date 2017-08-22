@@ -16,20 +16,24 @@
         </li>
       </ul>
     </div>
-    <div class="input-box" id="ipt-box" :class="{inputFocus: focus}">
-      <!--<textarea ref="iptmsg" maxlength="30" @blur="test" @focus="test2"></textarea>-->
+    <div v-if="ios" class="ios-input-box" id="ipt-box" :class="{inputFocus: focus}">
+      <input ref="iptmsg" maxlength="30" @focus="test2">
+      <span @click="sendmsg" class="sendmsg">发送</span>
+    </div>
+    <div v-else class="android-input-box" id="ipt-box">
       <textarea ref="iptmsg" maxlength="30" resize="none"></textarea>
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script>
   import axios from 'axios'
   import BScroll from 'better-scroll'
   import qs from 'qs'
   export default {
     data() {
       return {
+        ios: false,
         focus: false,
         mySeat: 1,
         otherSeat: '',
@@ -53,6 +57,17 @@
       window.clearInterval(this.getCurMsg)
     },
     created() {
+      let u = navigator.userAgent
+      // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
+      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+      if (isiOS) {
+        this.ios = true
+      } else {
+        this.ios = false
+      }
+      console.log('isios==' + this.ios)
+      // this.$message.error('是否是Android：' + isAndroid)
+      // this.$message.error('是否是iOS：' + isiOS)
       this.getChatingDetail()
 //      this.getCurMsg = setInterval(() => {
 //        axios.get('/api/tChatController.do?getNewMsg', {params: {
@@ -79,7 +94,7 @@
       },
       test() {
         console.log('blur')
-        // this.focus = false
+        this.focus = false
 //        this.$nextTick(() => {
 //          this._initScroll()
 //        })
@@ -107,9 +122,9 @@
           sendSeat: this.$store.state.userId,
           receiveSeat: this.$store.state.chatId
         })).then((res) => {
-          console.log(res)
+          // console.log(res)
         })
-        console.log(val)
+        // console.log(val)
       },
       getChatingDetail() {
         axios.get('/api/tChatController.do?datagrid', {
@@ -135,7 +150,7 @@
           click: true
         })
         let el = this.$refs.msgwrapperul.lastElementChild
-        console.log(el)
+        // console.log(el)
         this.msgScroll.scrollToElement(el, 400)
       },
       _initTime() {
@@ -159,11 +174,8 @@
 </script>
 <style lang="less" rel="stylesheet/less">
   @import "../../common/less/mixin.less";
-  .input-box{
-    display: flex;
-    width: 100%;
-    height: 40px;
-    textarea{
+  .android-input-box, .ios-input-box{
+    textarea, input{
       flex: 1;
       box-sizing: border-box;
       height: 40px;
@@ -184,6 +196,20 @@
       font-size: 17px;
       font-weight:700;
     }
+  }
+  .android-input-box{
+    display: flex;
+    width: 100%;
+    height: 40px;
+    
+  }
+  .ios-input-box{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 40px;
   }
   .chating{
     height: 100%;
@@ -206,7 +232,7 @@
     }
     .msg-wrapper{
       width: 100%;
-      height: 86.5%;
+      height: 88%;
       overflow: hidden;
       background: #eee;
       ul{
@@ -270,10 +296,10 @@
   }
   .chating{
     .msg-wrapper{
-      .inputFocus{
+      &.inputFocus{
         position: relative !important;
         top: 0;
-        bottom: 0;
+        height: 69%;
       }
     }
   }
