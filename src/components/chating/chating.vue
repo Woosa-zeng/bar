@@ -57,14 +57,14 @@
       window.clearInterval(this.getCurMsg)
     },
     created() {
-      let u = navigator.userAgent
+//      let u = navigator.userAgent
       // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
-      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
-      if (isiOS) {
-        this.ios = true
-      } else {
-        this.ios = false
-      }
+//      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+//      if (isiOS) {
+//        this.ios = true
+//      } else {
+//        this.ios = false
+//      }
       console.log('isios==' + this.ios)
       // this.$message.error('是否是Android：' + isAndroid)
       // this.$message.error('是否是iOS：' + isiOS)
@@ -201,7 +201,7 @@
     display: flex;
     width: 100%;
     height: 40px;
-    
+
   }
   .ios-input-box{
     position: fixed;
@@ -305,6 +305,6 @@
   }
   .inputFocus{
     position: absolute;
-    top: 500px;
+    bottom: 40px;
   }
 </style>
