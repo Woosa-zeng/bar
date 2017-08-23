@@ -59,7 +59,7 @@
     </transition>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script >
   import axios from 'axios'
   import BScroll from 'better-scroll'
   import qs from 'qs'
@@ -78,6 +78,7 @@
     },
     created() {
       this.getShopCar()
+      this.getAmount()
     },
     methods: {
       isNumber() {
@@ -135,19 +136,23 @@
           }
         }).then((res) => {
           res = res.data.rows
-          let num = 0
           if (res) {
             this.shopCar = (res)
-            this.amount = res
-            for (let i = 0; i < res.length; i++) {
-              num += res[i].amount
-            }
-            this.amount = num
             this.$nextTick(() => {
               this.initScroll()
             })
           }
           console.log(this.shopCar)
+        })
+      },
+      getAmount() {
+        axios.get('/api/tOrderController.do?getId', {
+          params: {
+            id: this.$store.state.orderId
+          }
+        }).then((res) => {
+          this.amount = res.data.amount
+          console.log(this.amount)
         })
       },
       initScroll() {

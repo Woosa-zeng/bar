@@ -1,7 +1,7 @@
 <template>
   <div class="chating">
     <div class="seat">
-      <span class="goPrev" @click="goPrev"><</span><span class="seatName">{{otherSeat}}</span>
+      <span class="goPrev" @click="goPrev"><i class="icon-arrow_lift iconfont"></i> </span><span class="seatName">{{otherSeat}}</span>
     </div>
     <div class="msg-wrapper" :class="{inputFocus: focus}" ref="msgwrapper">
       <ul ref="msgwrapperul">
@@ -36,7 +36,7 @@
         ios: false,
         focus: false,
         mySeat: 1,
-        otherSeat: '',
+        otherSeat: this.$store.state.chatName,
         otherAvatar: '',
         myAvatar: '',
         chatMsg: [
@@ -217,17 +217,18 @@
       width: 100%;
       height: 40px;
       line-height: 40px;
-      font-size: 24px;
       text-align: center;
       background: #000;
       color: #fff;
       .goPrev{
         float: left;
         padding: 0 10px;
+        font-size: 24px;
       }
       .seatName{
         position: relative;
         left: -20px;
+        font-size: 18px;
       }
     }
     .msg-wrapper{

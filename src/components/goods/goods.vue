@@ -139,6 +139,7 @@
     bottom: 46px;
     width: 100%;
     overflow: hidden;
+    background: #fff;
     .menu-wrapper{
       flex: 0 0 80px;
       width: 80px;

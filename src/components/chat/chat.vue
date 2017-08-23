@@ -27,7 +27,7 @@
     </div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script >
   import axios from 'axios'
   import BScroll from 'better-scroll'
   export default {
@@ -70,6 +70,11 @@
         console.log('id===' + id)
         console.log('seat===' + seat)
         console.log('nickname===' + nickname)
+        if (nickname) {
+          this.$store.commit('CHAT_NAME', {'chatName': nickname})
+        } else {
+          this.$store.commit('CHAT_NAME', {'chatName': seat})
+        }
         this.$store.commit('CHAT_ID', {'chatId': id})
         this.$router.push({name: 'chating'})
       }
@@ -87,6 +92,7 @@
     overflow: hidden;
     .list-wrapper{
       width: 100%;
+      background: #fff;
     }
     .list-item{
       display: flex;

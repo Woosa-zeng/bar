@@ -6,5 +6,6 @@ export const COMPANY_ID = 'COMPANY_ID' // company-id
 export const COMPANY_NAME = 'COMPANY_NAME' // company-name
 export const SELF_SEAT = 'SELF_SEAT' // self-seat
 export const CHAT_ID = 'CHAT_ID' // chat-id
+export const CHAT_NAME = 'CHAT_NAME' // chat-name
 export const NICKNAME = 'NICKNAME' // nickname
 export const ORDER_ID = 'ORDER_ID' // order-id

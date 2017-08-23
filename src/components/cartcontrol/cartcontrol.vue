@@ -9,7 +9,7 @@
     </div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script>
   import Vue from 'vue'
   import axios from 'axios'
   import qs from 'qs'

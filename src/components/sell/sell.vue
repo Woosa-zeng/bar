@@ -79,6 +79,7 @@
     display: flex;
     height: 40px;
     line-height: 36px;
+    background: #fff;
     .border-1px;
     .nav-goods,.nav-chart{
       flex: 1;

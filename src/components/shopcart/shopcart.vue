@@ -24,11 +24,12 @@
         <ul>
           <li class="food" v-for="item in selectFoods">
             <span class="name">{{item.productName}}</span>
+            <span class="desc">{{item.speciDetail.dictNameNext}}</span>
             <div class="price">
-              <span>￥{{item.price*item.count}}</span>
+              <span>￥ {{(item.discount < 1 ? item.discountPrice : item.price) * item.count}}</span>
             </div>
             <div class="cartcontrol-wrapper">
-              <cartcontrol :item="item"></cartcontrol>
+              <cartcontrol :food="item"></cartcontrol>
             </div>
           </li>
         </ul>
@@ -39,7 +40,7 @@
   </div>
 
 </template>
-<script type="text/ecmascript-6">
+<script >
   import cartcontrol from '../cartcontrol/cartcontrol'
   import BScroll from 'better-scroll'
   import axios from 'axios'
@@ -63,7 +64,7 @@
       totalPrice() {
         let total = 0
         this.selectFoods.forEach((food) => {
-          total += food.price * food.count
+          total += (food.discount < 1 ? food.discountPrice : food.price) * food.count
         })
         return total
       },
@@ -266,6 +267,10 @@
             line-height: 24px;
             font-size: 14px;
             color: rgb(7, 17, 27);
+          }
+          .desc{
+            font-size: 10px;
+            color: #ccc;
           }
           .price {
             position: absolute;

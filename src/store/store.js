@@ -11,9 +11,10 @@ const store = new Vuex.Store({
     activeRoute: 'goods',
     companyId: '402880e447e99cf10147e9a03b320003',
     companyName: null,
-    selfSeat: 1,
-    chatId: null,
-    nickname: null,
+    selfSeat: 1, // 自己的坐位号
+    chatId: null, // 当前聊天对象的id
+    chatName: null, // 当前聊天对象的昵称或桌号
+    nickname: null, // 自己的昵称
     orderId: ''
   },
   mutations: {
@@ -40,6 +41,9 @@ const store = new Vuex.Store({
     },
     [type.CHAT_ID](state, payload) {
       state.chatId = payload.chatId
+    },
+    [type.CHAT_NAME](state, payload) {
+      state.chatName = payload.chatName
     },
     [type.NICKNAME](state, payload) {
       state.nickname = payload.nickname
