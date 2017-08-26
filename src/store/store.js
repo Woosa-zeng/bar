@@ -7,14 +7,15 @@ const store = new Vuex.Store({
   state: {
     userId: '',
     genderFlag: false,
-    sex: null,
+    sex: '',
     activeRoute: 'goods',
     companyId: '402880e447e99cf10147e9a03b320003',
-    companyName: null,
-    selfSeat: 1, // 自己的坐位号
-    chatId: null, // 当前聊天对象的id
-    chatName: null, // 当前聊天对象的昵称或桌号
-    nickname: null, // 自己的昵称
+    companyName: '',
+    selfSeat: '', // 自己的坐位号
+    selfAvatar: '', // 自己的头像
+    chatId: '', // 当前聊天对象的id
+    chatName: '', // 当前聊天对象的昵称或桌号
+    nickname: '', // 自己的昵称
     orderId: ''
   },
   mutations: {
@@ -50,6 +51,9 @@ const store = new Vuex.Store({
     },
     [type.ORDER_ID](state, payload) {
       state.orderId = payload.orderId
+    },
+    [type.SELF_AVATAR](state, payload) {
+      state.selfAvatar = payload.selfAvatar
     }
   }
 })

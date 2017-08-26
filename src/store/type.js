@@ -9,3 +9,4 @@ export const CHAT_ID = 'CHAT_ID' // chat-id
 export const CHAT_NAME = 'CHAT_NAME' // chat-name
 export const NICKNAME = 'NICKNAME' // nickname
 export const ORDER_ID = 'ORDER_ID' // order-id
+export const SELF_AVATAR = 'SELF_AVATAR' // order-id

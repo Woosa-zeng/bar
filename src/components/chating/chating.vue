@@ -6,9 +6,9 @@
     <div class="msg-wrapper" :class="{inputFocus: focus}" ref="msgwrapper">
       <ul ref="msgwrapperul">
         <li v-for="item in chatMsg" class="msg-item clearfix">
-          <p class="time" v-if="item.createDate">{{item.createDate}}</p>
-          <div class="wrapper" :class="{selfMsg: item.sendSeat == mySeat}">
-            <img src="../../assets/avatar.jpeg" alt="" width="50" height="50">
+          <p class="time">{{item.createDate}}</p>
+          <div class="wrapper" :class="{selfMsg: item.sendSeat == selfId}">
+            <img :src="msgurl+item.sendImage" alt="" width="50" height="50">
             <div class="msg-bor">
               <p>{{item.msg}}</p>
             </div>
@@ -16,8 +16,9 @@
         </li>
       </ul>
     </div>
-    <div v-if="ios" class="ios-input-box" id="ipt-box" :class="{inputFocus: focus}">
-      <input ref="iptmsg" maxlength="30" @focus="test2">
+    <div v-if="ios" class="android-input-box">
+      <!--<input ref="iptmsg" maxlength="30" @focus="onfocus" @blur="onblur">-->
+      <textarea ref="iptmsg" maxlength="30" resize="none" @focus="onfocus"></textarea>
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
     <div v-else class="android-input-box" id="ipt-box">
@@ -33,84 +34,74 @@
   export default {
     data() {
       return {
+        msgurl: 'http://sz.jlhuanqi.com:8080',
         ios: false,
         focus: false,
-        mySeat: 1,
+        selfId: this.$store.state.userId,
         otherSeat: this.$store.state.chatName,
         otherAvatar: '',
         myAvatar: '',
-        chatMsg: [
-          {
-            msg: 'I am andy,bala……,hello I am andy,bala……',
-            createDate: '12:31',
-            sendSeat: 11
-          },
-          {
-            msg: 'hello I am woosa',
-            createDate: '12:30',
-            sendSeat: 1
-          }
-        ]
+        chatMsg: []
       }
     },
     beforeDestroy() {
       window.clearInterval(this.getCurMsg)
     },
     created() {
-//      let u = navigator.userAgent
-      // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
-//      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
-//      if (isiOS) {
-//        this.ios = true
-//      } else {
-//        this.ios = false
-//      }
-      console.log('isios==' + this.ios)
+      let u = navigator.userAgent
+       // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
+      let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+      if (isiOS) {
+        this.ios = true
+      } else {
+        this.ios = false
+      }
       // this.$message.error('是否是Android：' + isAndroid)
       // this.$message.error('是否是iOS：' + isiOS)
       this.getChatingDetail()
 //      this.getCurMsg = setInterval(() => {
-//        axios.get('/api/tChatController.do?getNewMsg', {params: {
+//        axios.post('/api/tChatController.do?getNewMsg', qs.stringify({
 //          departId: this.$store.state.companyId,
 //          sendSeat: this.$store.state.chatId,
 //          receiveSeat: this.$store.state.userId
-//        }}).then((res) => {
-//          console.log(res)
-//          this.chatMsg.push(res.data)
+//        })).then((res) => {
+//          // console.log(res)
+//          if (res.data.length) {
+//            this.chatMsg.push(res.data)
+//            console.log(this.chatMsg)
+//          }
 //        })
 //      }, 3000)
     },
     methods: {
-      test2() {
-        this.focus = true
-        this.$nextTick(() => {
-          this._initScroll()
-        })
-        // alert('focus')
-//        let ipt = document.getElementById('ipt-box')
-//        setTimeout(() => {
-//          ipt.scrollIntoViewIfNeeded(true)
-//        }, 100)
+      onfocus() {
+        if (this.ios) {
+          console.log('focus')
+          this.focus = true
+          this.$nextTick(() => {
+            this._initScroll()
+          })
+        }
       },
-      test() {
-        console.log('blur')
-        this.focus = false
-//        this.$nextTick(() => {
-//          this._initScroll()
-//        })
+      onblur() {
+        if (this.ios) {
+          this.focus = false
+        }
       },
       goPrev() {
         this.$router.push({name: 'chat'})
         window.clearInterval(this.getCurMsg)
       },
       sendmsg() {
-        this.focus = false
-        console.log('sendmsg')
+        if (this.ios) {
+          this.focus = false
+        }
         let val = this.$refs.iptmsg.value
         this.chatMsg.push({
           msg: val,
           createDate: this._initTime(),
-          sendSeat: 1
+          sendSeat: this.selfId,
+          sendImage: this.$store.state.selfAvatar
         })
         this.$nextTick(() => {
           this._initScroll()
@@ -129,15 +120,13 @@
       getChatingDetail() {
         axios.get('/api/tChatController.do?datagrid', {
           params: {
-            page: 1,
-            rows: 20,
             departId: this.$store.state.companyId,
             sendSeat: this.$store.state.chatId,
             receiveSeat: this.$store.state.userId,
             field: 'departId,sendSeat,receiveSeat,msg,createDate'
           }
         }).then((res) => {
-          console.log(res.data)
+          this.chatMsg = res.data
           this.$nextTick(() => {
             this._initScroll()
           })
@@ -233,7 +222,7 @@
     }
     .msg-wrapper{
       width: 100%;
-      height: 88%;
+      height: 87%;
       overflow: hidden;
       background: #eee;
       ul{
@@ -298,14 +287,8 @@
   .chating{
     .msg-wrapper{
       &.inputFocus{
-        position: relative !important;
-        top: 0;
-        height: 69%;
+        height: 80%;
       }
     }
-  }
-  .inputFocus{
-    position: absolute;
-    bottom: 40px;
   }
 </style>

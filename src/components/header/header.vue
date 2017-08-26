@@ -1,9 +1,11 @@
 <template>
   <div class="header">
     <div class="content-wrapper">
-      <div class="avatar"></div>
+      <div class="avatar">
+        <img :src="companyAvatar" alt="" width="70" height="70">
+      </div>
       <div class="content">
-        <h1>WOLF酒吧</h1>
+        <h1>{{companyName}}</h1>
         <div class="msg">
           <i class="icon-xiaolaba iconfont"></i>
           <span>欢迎您的光临！</span>
@@ -58,22 +60,21 @@
   export default {
     data() {
       return {
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         gender: '',
+        companyAvatar: '',
+        companyName: '',
         ismale: true,
         isfemale: false,
         genderflag: this.$store.state.genderFlag,
         changeName: true,
-        nickname: this.$store.state.nickname || this.$store.state.selfSeat,
-        userInfo: {
-          cId: 1,
-          cName: 'xxbar',
-          seat: 11
-        }
+        nickname: '',
+        userInfo: {}
       }
     },
     created() {
       this.getInfo()
-      console.log('created==' + this.genderflag)
+      // console.log('created==' + this.genderflag)
     },
     watch: {
       gender() {
@@ -83,27 +84,40 @@
     computed: {
     },
     methods: {
+      GetQueryString(name) {
+        let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+        let r = window.location.search.substr(1).match(reg)
+        if (r != null) {
+          return r[2]
+        } else {
+          return null
+        }
+      },
       getInfo() {
         // 扫描存储用户信息
-        axios.get('/index.html').then((res) => {
-          console.log(res)
-//      if (res) {
-//        this.userInfo = res
-//        this.$store.commit('SELF_SEAT', {selfSeat: res.seat})
-//        this.$store.commit('COMPANY_NAME', {companyName: res.cName})
-//        this.$store.commit('COMPANY_ID', {companyId: res.departId})
-//      } else {
-//        this.$message({
-//          type: 'error',
-//          message: '参数错误，请重新扫描!'
+//        axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
+//          console.log(res)
 //        })
-//      }
-        })
+//        let cId = this.GetQueryString('cId')
+//        let cName = decodeURI(this.GetQueryString('cName'))
+//        let seat = this.GetQueryString('seat')
+//        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+
+        let cId = '402880e447e99cf10147e9a03b320003'
+        let cName = '深圳市好好酒吧有限公司'
+        let seat = 88888
+        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+
+        this.nickname = seat
+        this.companyName = cName
+        this.$store.commit('SELF_SEAT', {selfSeat: seat})
+        this.$store.commit('COMPANY_NAME', {companyName: cName})
+        this.$store.commit('COMPANY_ID', {companyId: cId})
       },
       // 保存修改昵称
       saveNewName() {
         let newName = this.$refs.nicknamebox.value
-        axios.post('api/tChatUserController.do?doUpdate', qs.stringify({
+        axios.post('/api/tChatUserController.do?doUpdate', qs.stringify({
           Id: this.$store.state.userId,
           nickName: newName
         }))
@@ -154,9 +168,10 @@
           seat: this.$store.state.selfSeat,
           sex: this.$store.state.sex
         })).then(res => {
-          console.log(typeof res.data)
-          this.$store.commit('USER_ID', {userId: res.data})
-          console.log(this.$store.state.userId)
+          // console.log(typeof res.data)
+          this.$store.commit('USER_ID', {userId: res.data.id})
+          this.$store.commit('SELF_AVATAR', {selfAvatar: res.data.images})
+          // console.log(this.$store.state.userId)
         })
       }
     }
@@ -317,6 +332,10 @@
        margin-left: 15px;
        h1{
          font-size: 18px;
+         width: 145px;
+         overflow: hidden;
+         white-space: nowrap;
+         text-overflow: ellipsis;
        }
        .msg{
          font-size: 12px;

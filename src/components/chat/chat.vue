@@ -43,17 +43,15 @@
     },
     methods: {
       getList() {
-        axios.get('/api/tSeatController.do?datagrid', {
+        axios.get('/api/tChatUserController.do?datagrid', {
           params: {
-            page: 1,
-            rows: 10,
             departId: this.$store.state.companyId,
             currentId: this.$store.state.userId,
-            field: 'seat,sex,images,msgs,id,nickname'
+            field: 'seat,sex,images,msgs,id,nickName'
           }
         }).then((res) => {
           this.listItem = res.data.rows
-          console.log(res.data.rows)
+          // console.log(res.data.rows)
           this.$nextTick(() => {
             this._initScroll()
           })

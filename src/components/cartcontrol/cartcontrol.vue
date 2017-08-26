@@ -52,7 +52,7 @@
           orderId: this.$store.state.orderId,
           proId: this.food.id,
           number: this.food.count,
-          seatNumber: 1,
+          seatNumber: this.$store.state.selfSeat,
           dapartid: this.$store.state.companyId
         })).then((res) => {
           console.log(res)
