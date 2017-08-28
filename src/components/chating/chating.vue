@@ -16,12 +16,12 @@
         </li>
       </ul>
     </div>
-    <div v-if="ios" class="android-input-box">
+    <div v-if="ios" class="android-input-box box1">
       <!--<input ref="iptmsg" maxlength="30" @focus="onfocus" @blur="onblur">-->
       <textarea ref="iptmsg" maxlength="30" resize="none" @focus="onfocus"></textarea>
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
-    <div v-else class="android-input-box" id="ipt-box">
+    <div v-else class="android-input-box box2" id="ipt-box">
       <textarea ref="iptmsg" maxlength="30" resize="none"></textarea>
       <span @click="sendmsg" class="sendmsg">发送</span>
     </div>
@@ -49,7 +49,7 @@
     },
     created() {
       let u = navigator.userAgent
-       // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
+      // let isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1 // android终端
       let isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
       if (isiOS) {
         this.ios = true
@@ -59,19 +59,26 @@
       // this.$message.error('是否是Android：' + isAndroid)
       // this.$message.error('是否是iOS：' + isiOS)
       this.getChatingDetail()
-//      this.getCurMsg = setInterval(() => {
-//        axios.post('/api/tChatController.do?getNewMsg', qs.stringify({
-//          departId: this.$store.state.companyId,
-//          sendSeat: this.$store.state.chatId,
-//          receiveSeat: this.$store.state.userId
-//        })).then((res) => {
-//          // console.log(res)
-//          if (res.data.length) {
-//            this.chatMsg.push(res.data)
-//            console.log(this.chatMsg)
-//          }
-//        })
-//      }, 3000)
+      this.getCurMsg = setInterval(() => {
+        axios.post('/api/tChatController.do?getNewMsg', qs.stringify({
+          departId: this.$store.state.companyId,
+          sendSeat: this.$store.state.userId,
+          receiveSeat: this.$store.state.chatId
+        })).then((res) => {
+          // console.log(res.data)
+          if (res.data.msg) {
+            this.chatMsg.push({
+              msg: res.data.msg,
+              createDate: res.data.createDate,
+              sendSeat: res.data.sendSeat,
+              sendImage: res.data.sendImage
+            })
+            this.$nextTick(() => {
+              this._initScroll()
+            })
+          }
+        })
+      }, 3000)
     },
     methods: {
       onfocus() {

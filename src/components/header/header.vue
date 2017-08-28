@@ -54,7 +54,7 @@
     <div class="msk-c" :class="{hide: changeName}" ></div>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script >
   import axios from 'axios'
   import qs from 'qs'
   export default {
@@ -102,14 +102,14 @@
 //        let cName = decodeURI(this.GetQueryString('cName'))
 //        let seat = this.GetQueryString('seat')
 //        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
-
+        let nickname = window.localStorage.getItem('nickname')
+        console.log('nickname===' + nickname)
         let cId = '402880e447e99cf10147e9a03b320003'
         let cName = '深圳市好好酒吧有限公司'
         let seat = 88888
         this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
-
-        this.nickname = seat
         this.companyName = cName
+        this.nickname = nickname || seat
         this.$store.commit('SELF_SEAT', {selfSeat: seat})
         this.$store.commit('COMPANY_NAME', {companyName: cName})
         this.$store.commit('COMPANY_ID', {companyId: cId})
@@ -120,9 +120,11 @@
         axios.post('/api/tChatUserController.do?doUpdate', qs.stringify({
           Id: this.$store.state.userId,
           nickName: newName
-        }))
-        this.nickname = newName
-        this.$store.commit('NICKNAME', {nickname: newName})
+        })).then(res => {
+          this.nickname = newName
+          window.localStorage.setItem('nickname', newName)
+          this.$store.commit('NICKNAME', {nickname: newName})
+        })
         this.closeChangenameFlag()
       },
       // 取消修改昵称

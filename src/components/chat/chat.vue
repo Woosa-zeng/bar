@@ -2,7 +2,7 @@
   <div class="chat">
     <div class="list-wrapper" ref="listwrapper">
       <ul>
-        <li @click="goChating(item.id,item.seat,item.nickname)" class="list-item" v-for="item in listItem">
+        <li @click="goChating(item.id,item.seat,item.nickName)" class="list-item" v-for="item in listItem">
           <div class="left">
             <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
@@ -33,7 +33,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://sz.jlhuanqi.com:8080',
         listItem: [],
         ismale: true
       }
@@ -43,6 +43,7 @@
     },
     methods: {
       getList() {
+        // this.getCurMsg = setInterval(() => {
         axios.get('/api/tChatUserController.do?datagrid', {
           params: {
             departId: this.$store.state.companyId,
@@ -58,6 +59,7 @@
         }).catch((error) => {
           console.log(error)
         })
+        // }, 3000)
       },
       _initScroll() {
         this.listScroll = new BScroll(this.$refs.listwrapper, {
@@ -65,9 +67,9 @@
         })
       },
       goChating(id, seat, nickname) {
-        console.log('id===' + id)
-        console.log('seat===' + seat)
-        console.log('nickname===' + nickname)
+        // console.log('id===' + id)
+        // console.log('seat===' + seat)
+        // console.log('nickname===' + nickname)
         if (nickname) {
           this.$store.commit('CHAT_NAME', {'chatName': nickname})
         } else {
