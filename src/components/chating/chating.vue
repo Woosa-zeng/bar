@@ -74,7 +74,7 @@
               sendImage: res.data.sendImage
             })
             this.$nextTick(() => {
-              this._initScroll()
+              this._goScroll()
             })
           }
         })
@@ -86,7 +86,7 @@
           console.log('focus')
           this.focus = true
           this.$nextTick(() => {
-            this._initScroll()
+            this._goScroll()
           })
         }
       },
@@ -111,7 +111,7 @@
           sendImage: this.$store.state.selfAvatar
         })
         this.$nextTick(() => {
-          this._initScroll()
+          this._goScroll()
         })
         this.$refs.iptmsg.value = ''
         axios.post('/api/tChatController.do?doAdd', qs.stringify({
@@ -147,6 +147,10 @@
         })
         let el = this.$refs.msgwrapperul.lastElementChild
         // console.log(el)
+        this.msgScroll.scrollToElement(el, 400)
+      },
+      _goScroll() {
+        let el = this.$refs.msgwrapperul.lastElementChild
         this.msgScroll.scrollToElement(el, 400)
       },
       _initTime() {
