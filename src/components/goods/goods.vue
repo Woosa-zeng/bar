@@ -40,7 +40,7 @@
     <shopcart :select-foods="selectFoods"></shopcart>
   </div>
 </template>
-<script type="text/ecmascript-6">
+<script>
   import axios from 'axios'
   import shopcart from '../shopcart/shopcart'
   import cartcontrol from '../cartcontrol/cartcontrol'
@@ -50,7 +50,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
         goods: [],
         listHeight: [],
         scrollY: 0

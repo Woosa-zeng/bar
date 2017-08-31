@@ -34,7 +34,7 @@
   export default {
     data() {
       return {
-        msgurl: 'http://sz.jlhuanqi.com:8080',
+        msgurl: 'http://pay.zuchezaixian.net',
         ios: false,
         focus: false,
         selfId: this.$store.state.userId,
@@ -62,8 +62,8 @@
       this.getCurMsg = setInterval(() => {
         axios.post('/api/tChatController.do?getNewMsg', qs.stringify({
           departId: this.$store.state.companyId,
-          sendSeat: this.$store.state.userId,
-          receiveSeat: this.$store.state.chatId
+          sendSeat: this.$store.state.chatId,
+          receiveSeat: this.$store.state.userId
         })).then((res) => {
           // console.log(res.data)
           if (res.data.msg) {
@@ -73,21 +73,16 @@
               sendSeat: res.data.sendSeat,
               sendImage: res.data.sendImage
             })
-            this.$nextTick(() => {
-              this._goScroll()
-            })
           }
+          this.goScrollY() // 重新绘制
         })
-      }, 3000)
+      }, 8000)
     },
     methods: {
       onfocus() {
         if (this.ios) {
-          console.log('focus')
           this.focus = true
-          this.$nextTick(() => {
-            this._goScroll()
-          })
+          this.goScrollY() // 重新绘制
         }
       },
       onblur() {
@@ -110,9 +105,7 @@
           sendSeat: this.selfId,
           sendImage: this.$store.state.selfAvatar
         })
-        this.$nextTick(() => {
-          this._goScroll()
-        })
+        this.goScrollY() // 重新绘制
         this.$refs.iptmsg.value = ''
         axios.post('/api/tChatController.do?doAdd', qs.stringify({
           msg: val,
@@ -141,15 +134,18 @@
           console.log(error)
         })
       },
+      goScrollY() {
+        this.$nextTick(() => {
+          let el = this.$refs.msgwrapperul.lastElementChild
+          this.msgScroll.refresh()
+          this.msgScroll.scrollToElement(el, 400)
+        })
+      },
       _initScroll() {
         this.msgScroll = new BScroll(this.$refs.msgwrapper, {
-          click: true
+          click: true,
+          probeType: 3
         })
-        let el = this.$refs.msgwrapperul.lastElementChild
-        // console.log(el)
-        this.msgScroll.scrollToElement(el, 400)
-      },
-      _goScroll() {
         let el = this.$refs.msgwrapperul.lastElementChild
         this.msgScroll.scrollToElement(el, 400)
       },
@@ -299,6 +295,7 @@
     .msg-wrapper{
       &.inputFocus{
         height: 80%;
+        overflow: hidden;
       }
     }
   }

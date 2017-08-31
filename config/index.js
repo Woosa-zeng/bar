@@ -1,6 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-var $server = 'http://sz.jlhuanqi.com:8080'
+var $server = 'http://pay.zuchezaixian.net'
 
 module.exports = {
   build: {

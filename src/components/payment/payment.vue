@@ -66,7 +66,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
         seat: this.$store.state.selfSeat,
         sentSomeone: '',
         shopCar: [],

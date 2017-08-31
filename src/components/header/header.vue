@@ -60,7 +60,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
         gender: '',
         companyAvatar: '',
         companyName: '',
@@ -173,6 +173,7 @@
           // console.log(typeof res.data)
           this.$store.commit('USER_ID', {userId: res.data.id})
           this.$store.commit('SELF_AVATAR', {selfAvatar: res.data.images})
+          console.log('selfid=== ' + res.data.id)
           // console.log(this.$store.state.userId)
         })
       }
