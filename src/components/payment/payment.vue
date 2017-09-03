@@ -4,7 +4,7 @@
       <p class="bor-1px"><span class="title">我的桌号</span> <span class="tr">{{seat}}</span></p>
     </div>
     <div class="col">
-      <p><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" @blur="isNumber"></p>
+      <p><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" ></p>
     </div>
     <div class="goods-content mt20" ref="shopcarwrapper">
       <ul>
@@ -30,7 +30,7 @@
         <div class="footer-left">
           <p>¥{{amount}}</p>
         </div>
-        <div class="footer-right" @click="pay">
+        <div class="footer-right" @click="payType">
           <div class="pay">确认付款</div>
         </div>
       </div>
@@ -68,7 +68,7 @@
       return {
         imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
         seat: this.$store.state.selfSeat,
-        sentSomeone: '',
+        sentSomeone: '0',
         shopCar: [],
         show: false,
         payment: '微信支付',
@@ -104,6 +104,21 @@
           this.show = false
         }, 800)
       },
+      payType() {
+        let type = this.paymentFlag
+        if (type === 0) {
+          this.payOnline()
+        } else {
+          this.pay()
+        }
+      },
+      payOnline() {
+        let state = this.$store.state.orderId + ',' + this.sentSomeone
+        let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
+        let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
+        window.location.href = encodeURI(weixinUrl)
+        console.log(weixinUrl)
+      },
       pay() {
         axios.post('/api/tOrderController.do?pay', qs.stringify({
           id: this.$store.state.orderId,
@@ -111,13 +126,14 @@
           giveSeatNumber: this.sentSomeone
         })).then((res) => {
           if (res.data.success) {
-            this.$message({
-              type: 'success',
-              message: '支付成功，即将返回！'
-            })
-            setTimeout(() => {
-              this.$router.push('goods')
-            }, 1500)
+            this.$router.push({name: 'paysuccess'})
+//            this.$message({
+//              type: 'success',
+//              message: '支付成功，即将返回！'
+//            })
+//            setTimeout(() => {
+//              this.$router.push('goods')
+//            }, 1500)
           } else {
             this.$message({
               type: 'error',

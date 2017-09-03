@@ -76,7 +76,7 @@
           }
           this.goScrollY() // 重新绘制
         })
-      }, 8000)
+      }, 3000)
     },
     methods: {
       onfocus() {

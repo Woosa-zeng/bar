@@ -67,7 +67,7 @@
         })
       },
       goChating(id, seat, nickname) {
-        // console.log('id===' + id)
+        console.log('id===' + id)
         // console.log('seat===' + seat)
         // console.log('nickname===' + nickname)
         if (nickname) {

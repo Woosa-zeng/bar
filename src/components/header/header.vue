@@ -107,7 +107,7 @@
         let cId = '402880e447e99cf10147e9a03b320003'
         let cName = '深圳市好好酒吧有限公司'
         let seat = 88888
-        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
         this.companyName = cName
         this.nickname = nickname || seat
         this.$store.commit('SELF_SEAT', {selfSeat: seat})
@@ -207,7 +207,6 @@
         margin: 0 auto;
         line-height: 44px;
         border-radius: 44px;
-
         text-align: center;
         font-size: 15px;
       }

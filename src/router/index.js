@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import sell from '@/components/sell/sell'
 import chating from '@/components/chating/chating'
 import payment from '@/components/payment/payment'
+import paysuccess from '@/components/paySuccess/paySuccess'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/payment',
       name: 'payment',
       component: payment
+    },
+    {
+      path: '/paysuccess',
+      name: 'paysuccess',
+      component: paysuccess
     }
   ]
 })
