@@ -6,7 +6,7 @@
           <i class="icon-gouwuchekong iconfont"></i>
           <div class="num" v-show="totalCount>0">{{totalCount}}</div>
         </div>
-        <div class="price">￥<span>{{totalPrice}}</span>元</div>
+        <div class="price">￥<span>{{totalPrice|fixtwo}}</span>元</div>
       </div>
       <div class="ct-right" @click.stop.prevent="pay">
         <div class="pay" :class="payClass">
@@ -26,7 +26,7 @@
             <span class="name">{{item.productName}}</span>
             <span class="desc">{{item.speciDetail.dictNameNext}}</span>
             <div class="price">
-              <span>￥ {{(item.discount < 1 ? item.discountPrice : item.price) * item.count}}</span>
+              <span>￥ {{(item.discount < 1 ? item.discountPrice : item.price) * item.count | fixtwo}}</span>
             </div>
             <div class="cartcontrol-wrapper">
               <cartcontrol :food="item"></cartcontrol>
@@ -49,6 +49,25 @@
     data() {
       return {
         fold: true
+      }
+    },
+    filters: {
+      fixtwo: function(x) {
+        let fx = parseFloat(x)
+        if (isNaN(fx)) {
+          return false
+        }
+        fx = Math.round(x * 100) / 100
+        let sx = fx.toString()
+        let posdecimal = sx.indexOf('.')
+        if (posdecimal < 0) {
+          posdecimal = sx.length
+          sx += '.'
+        }
+        while (sx.length <= posdecimal + 2) {
+          sx += '0'
+        }
+        return sx
       }
     },
     props: {

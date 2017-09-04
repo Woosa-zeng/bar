@@ -25,8 +25,8 @@
                 <h2 class="name">{{food.productName}}</h2>
                 <p class="desc">{{food.speciDetail.dictNameNext}}</p>
                 <div class="price">
-                  <span class="now">￥{{food.discount < 1 ? food.discountPrice : food.price}}</span>
-                  <span class="old" v-show="food.discount < 1">￥{{food.discount < 1 ? food.price : food.discountPrice}}</span>
+                  <span class="now">￥{{food.discount < 1 ? food.discountPrice : food.price | fixtwo}}</span>
+                  <span class="old" v-show="food.discount < 1">￥{{food.discount < 1 ? food.price : food.discountPrice | fixtwo}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol :food="food"></cartcontrol>
@@ -46,7 +46,6 @@
   import cartcontrol from '../cartcontrol/cartcontrol'
   import BScroll from 'better-scroll'
   import qs from 'qs'
-
   export default {
     data() {
       return {
@@ -54,6 +53,25 @@
         goods: [],
         listHeight: [],
         scrollY: 0
+      }
+    },
+    filters: {
+      fixtwo: function(x) {
+        let fx = parseFloat(x)
+        if (isNaN(fx)) {
+          return false
+        }
+        fx = Math.round(x * 100) / 100
+        let sx = fx.toString()
+        let posdecimal = sx.indexOf('.')
+        if (posdecimal < 0) {
+          posdecimal = sx.length
+          sx += '.'
+        }
+        while (sx.length <= posdecimal + 2) {
+          sx += '0'
+        }
+        return sx
       }
     },
     created() {

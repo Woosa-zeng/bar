@@ -95,24 +95,25 @@
       },
       getInfo() {
         // 扫描存储用户信息
-//        axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
-//          console.log(res)
-//        })
-//        let cId = this.GetQueryString('cId')
-//        let cName = decodeURI(this.GetQueryString('cName'))
-//        let seat = this.GetQueryString('seat')
-//        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        // axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
+        //   console.log(res)
+        // })
+        let cId = this.GetQueryString('cId')
+        let cName = decodeURI(this.GetQueryString('cName'))
+        let seat = this.GetQueryString('seat')
+        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        // let cId = '402880e447e99cf10147e9a03b320003'
+        // let cName = '深圳市好好酒吧有限公司'
+        // let seat = 88888
+        // this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+
         let nickname = window.localStorage.getItem('nickname')
-        console.log('nickname===' + nickname)
-        let cId = '402880e447e99cf10147e9a03b320003'
-        let cName = '深圳市好好酒吧有限公司'
-        let seat = 88888
-        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
         this.companyName = cName
         this.nickname = nickname || seat
         this.$store.commit('SELF_SEAT', {selfSeat: seat})
         this.$store.commit('COMPANY_NAME', {companyName: cName})
         this.$store.commit('COMPANY_ID', {companyId: cId})
+        document.title = cName
       },
       // 保存修改昵称
       saveNewName() {
@@ -170,11 +171,9 @@
           seat: this.$store.state.selfSeat,
           sex: this.$store.state.sex
         })).then(res => {
-          // console.log(typeof res.data)
           this.$store.commit('USER_ID', {userId: res.data.id})
           this.$store.commit('SELF_AVATAR', {selfAvatar: res.data.images})
           console.log('selfid=== ' + res.data.id)
-          // console.log(this.$store.state.userId)
         })
       }
     }

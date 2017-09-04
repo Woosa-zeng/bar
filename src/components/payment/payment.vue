@@ -4,7 +4,10 @@
       <p class="bor-1px"><span class="title">我的桌号</span> <span class="tr">{{seat}}</span></p>
     </div>
     <div class="col">
-      <p><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" ></p>
+      <p class="bor-1px"><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" ></p>
+    </div>
+    <div class="col pay-online">
+      <p><span class="title">支付方式</span><span class="fr goChangePayment" @click="show=!show">{{payment}}</span></p>
     </div>
     <div class="goods-content mt20" ref="shopcarwrapper">
       <ul>
@@ -22,9 +25,7 @@
         </li>
       </ul>
     </div>
-    <div class="col pay-online mt20">
-      <p><span class="title">支付方式</span><span class="fr goChangePayment" @click="show=!show">{{payment}}</span></p>
-    </div>
+    
     <div class="vfooter">
       <div class="content">
         <div class="footer-left">
@@ -68,7 +69,7 @@
       return {
         imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
         seat: this.$store.state.selfSeat,
-        sentSomeone: '0',
+        sentSomeone: '',
         shopCar: [],
         show: false,
         payment: '微信支付',
@@ -113,11 +114,12 @@
         }
       },
       payOnline() {
-        let state = this.$store.state.orderId + ',' + this.sentSomeone
-        let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
-        let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
-        window.location.href = encodeURI(weixinUrl)
-        console.log(weixinUrl)
+        let state = this.$store.state.orderId + ',' + (this.sentSomeone || 0)
+        console.log(`state== ${state}`)
+        // let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
+        // let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
+        // window.location.href = encodeURI(weixinUrl)
+        // console.log(weixinUrl)
       },
       pay() {
         axios.post('/api/tOrderController.do?pay', qs.stringify({
@@ -251,7 +253,7 @@
       .border-1px;
     }
     .mt20{
-      margin-top: 15px;
+      margin-top: 10px;
     }
     .mr20{
       margin-right: 15px;
@@ -261,7 +263,7 @@
     }
     .goods-content{
       padding: 0 15px;
-      max-height: 425px;
+      max-height: 456px;
       overflow: hidden;
       background: #fff;
       img{
@@ -317,13 +319,10 @@
       }
       .title{
         color: #333;
+        margin-right: 10px;
       }
     }
     .pay-online{
-      position: fixed;
-      left: 0;
-      bottom: 65px;
-      z-index: 50;
       width: 100%;
       height: 48px;
       line-height: 48px;
