@@ -9,7 +9,7 @@ const store = new Vuex.Store({
     genderFlag: false,
     sex: '',
     activeRoute: 'goods',
-    companyId: '402880e447e99cf10147e9a03b320003',
+    companyId: '',
     companyName: '',
     selfSeat: '', // 自己的坐位号
     selfAvatar: '', // 自己的头像

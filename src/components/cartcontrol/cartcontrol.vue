@@ -53,7 +53,7 @@
           proId: this.food.id,
           number: this.food.count,
           seatNumber: this.$store.state.selfSeat,
-          dapartid: this.$store.state.companyId
+          departid: this.$store.state.companyId
         })).then((res) => {
           console.log(res)
           if (res.data.success) {
