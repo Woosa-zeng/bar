@@ -48,11 +48,11 @@
               <img src="./icon_gouxuan.png" alt="" width="20" height="20" :class="{cur: paymentFlag===0}" class="hide">
             </div>
           </li>
-          <li class="payment-item" @click="changePayment(1)">
+          <li class="payment-item" @click="changePayment(2)">
             <div>
             <img src="./icon_xx.png" alt="" width="30" height="30">
             <span>线下支付</span>
-            <img src="./icon_gouxuan.png" alt="" width="20" height="20" :class="{cur: paymentFlag===1}" class="hide">
+            <img src="./icon_gouxuan.png" alt="" width="20" height="20" :class="{cur: paymentFlag===2}" class="hide">
             </div>
           </li>
         </ul>
@@ -116,10 +116,10 @@
       payOnline() {
         let state = this.$store.state.orderId + ',' + (this.sentSomeone || 0)
         console.log(`state== ${state}`)
-        // let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
-        // let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
-        // window.location.href = encodeURI(weixinUrl)
-        // console.log(weixinUrl)
+        let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
+        let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
+        window.location.href = encodeURI(weixinUrl)
+        console.log(weixinUrl)
       },
       pay() {
         axios.post('/api/tOrderController.do?pay', qs.stringify({
