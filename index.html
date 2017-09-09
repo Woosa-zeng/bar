@@ -1,12 +1,128 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>WOLF酒吧</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>WOLF酒吧</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <script async src="https://hammerjs.github.io/dist/hammer.js"></script>
+  <script async src="//cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+  <script async src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+<div id="app"></div>
+<!-- built files will be auto injected -->
+</body>
+<script>
+  setTimeout(function() {
+    setImgPinch()
+  }, 5000)
+
+  function setImgPinch() {
+    var myElement = document.getElementById('img-hook')
+    var manager = new Hammer.Manager(myElement)
+    console.log(manager)
+    var pinch = new Hammer.Pinch()
+    var pan = new Hammer.Pan()
+
+    pinch.recognizeWith([pan])
+    manager.add(pan)
+    manager.add(pinch)
+    manager.get('pinch').set({ enable: true })
+
+    var deltaX = 0
+    var deltaY = 0
+    var nLeftTemp = 0
+    var nTopTemp = 0
+    var liveScale = 1
+    var currentScale = 1
+    var nWidth = myElement.offsetWidth
+    var nHeight = myElement.offsetHeight  // 获取目标图片的高宽
+
+    manager.on('panmove', function(e) {
+      var dX = deltaX + e.deltaX
+      var dY = deltaY + e.deltaY
+      Velocity.hook(myElement, 'translateX', dX + 'px')
+      Velocity.hook(myElement, 'translateY', dY + 'px')   // 注Velocity是动画js库
+    })
+    manager.on('panend', function(e) {
+      deltaX = deltaX + e.deltaX
+      deltaY = deltaY + e.deltaY
+      var nOffSet = $(myElement).offset() // 这行开始下面是控制边界的逻辑
+      var nLeft = nOffSet.left
+      var nTop = nOffSet.top
+      var nMaxCrosswise = nWidth - liveScale * nWidth     // 最大左移的位置
+      var nMaxPortrait = nHeight - liveScale * nHeight    // 最大上移的位置
+      if (nLeft < nMaxCrosswise) {
+        nLeftTemp = nMaxCrosswise
+      } else if (nLeft > 0) {
+        nLeftTemp = 0
+      } else {
+        nLeftTemp = nLeft
+      }
+      if (nTop < nMaxPortrait) {
+        nTopTemp = nMaxPortrait
+      } else if (nTop > 0) {
+        nTopTemp = 0
+      } else {
+        nTopTemp = nTop
+      }
+      // debugger
+      // $(myElement).offset({
+      //     left: nLeftTemp,
+      //     top: nTopTemp
+      // });
+
+    })
+
+    function getRelativeScale(scale) {
+      return scale * currentScale
+    }
+    manager.on('pinchmove', function(e) {
+      var scale = getRelativeScale(e.scale)
+      if (scale > 3.0) {
+        scale = 3.0
+      } // 防止图片太糊，这里限制图片放大的最大倍数
+      if (scale < 1.0) {
+        scale = 1.0
+      }  // 不让图片缩小
+      Velocity.hook(myElement, 'scale', currentScale)
+    })
+    manager.on('pinchend', function(e) {
+      currentScale = getRelativeScale(e.scale)
+      if (currentScale > 3.0) {
+        currentScale = 3.0
+      }
+      if (currentScale < 1.0) {
+        currentScale = 1.0
+      }
+      liveScale = currentScale
+      Velocity.hook(myElement, 'scale', currentScale)  // 这里先放缩后然后做边界控制
+
+      var nOffSet = $(myElement).offset()
+      var nLeft = nOffSet.left
+      var nTop = nOffSet.top
+      var nMaxCrosswise = nWidth - liveScale * nWidth
+      var nMaxPortrait = nHeight - liveScale * nHeight
+      if (nLeft < nMaxCrosswise) {
+        nLeftTemp = nMaxCrosswise
+      } else if (nLeft > 0) {
+        nLeftTemp = 0
+      } else {
+        nLeftTemp = nLeft
+      }
+      if (nTop < nMaxPortrait) {
+        nTopTemp = nMaxPortrait
+      } else if (nTop > 0) {
+        nTopTemp = 0
+      } else {
+        nTopTemp = nTop
+      }
+      // $(myElement).offset({
+      //     left: nLeftTemp,
+      //     top: nTopTemp
+      // });
+    })
+  }
+
+</script>
 </html>

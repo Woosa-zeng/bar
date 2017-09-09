@@ -9,6 +9,13 @@
         <div class="msg">
           <i class="icon-xiaolaba iconfont"></i>
           <span>欢迎您的光临！</span>
+          <p @click="showSeatImg">坐位示意图</p>
+        </div>
+        <div class="img-ct" ref="imgct" v-show="seatImgFlag">
+          <div class="mask" @click="hideSeatImg"></div>
+          <div class="img-wraaper">
+            <img :src="seatImg" alt="" id="img-hook">
+          </div>
         </div>
       </div>
       <div class="userInfo" @click="changeNameLayer">
@@ -69,7 +76,9 @@
         genderflag: this.$store.state.genderFlag,
         changeName: true,
         nickname: '',
-        userInfo: {}
+        userInfo: {},
+        seatImg: '',
+        seatImgFlag: false
       }
     },
     created() {
@@ -84,6 +93,13 @@
     computed: {
     },
     methods: {
+      showSeatImg() {
+        this.seatImgFlag = true
+      },
+      hideSeatImg() {
+        console.log(112)
+        this.seatImgFlag = false
+      },
       GetQueryString(name) {
         let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
         let r = window.location.search.substr(1).match(reg)
@@ -102,6 +118,7 @@
 //        let cName = decodeURI(this.GetQueryString('cName'))
 //        let seat = this.GetQueryString('seat')
 //        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
         let cId = '402880e447e99cf10147e9a03b320003'
         let cName = '深圳市好好酒吧有限公司'
         let seat = 88888
@@ -180,7 +197,32 @@
   }
 </script>
 <style lang="less" rel="stylesheet/less">
-  @import "../../common/less/mixin.less";
+  @import "../../common/less/mixin.less";.img-ct{
+  .mask{
+    position: absolute;
+    z-index: 98;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #333;
+    opacity: 0.6;
+  }
+  .img-wraaper{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    z-index: 100;
+  }
+  img{
+    margin: 0 auto;
+    display: inherit;
+  }
+  }
+
   .msg-name{
     .msg-box-content{
       padding: 20px 20px 10px;
