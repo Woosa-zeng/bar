@@ -9,7 +9,7 @@
               <div class="title">
                 {{item.nickName ? item.nickName : item.seat}}
                 <div class="icon" :class="{r40: ismale}">
-                  <i v-if="item.sex > 0" class="icon-male iconfont"></i>
+                  <i v-if="item.sex < 1" class="icon-male iconfont"></i>
                   <i v-else class="icon-female iconfont"></i>
                 </div>
               </div>
@@ -19,7 +19,7 @@
             </div>
           </div>
           <div class="right" v-if="item.msgs">
-            <div class="time">{{item.msgs.createDate}}</div>
+            <div class="time">{{item.createBy}}</div>
             <div class="icon"></div>
           </div>
         </li>
@@ -48,7 +48,7 @@
           params: {
             departId: this.$store.state.companyId,
             currentId: this.$store.state.userId,
-            field: 'seat,sex,images,msgs,id,nickName'
+            field: 'seat,sex,images,msgs,id,nickName,createBy'
           }
         }).then((res) => {
           this.listItem = res.data.rows
@@ -107,6 +107,7 @@
         flex: 0 0 80px;
         width: 80px;
         text-align: right;
+        margin-right: 10px;
         .time{
           font-size: 13px;
           color: #7e8c8d;
@@ -128,6 +129,8 @@
       }
       .ct{
         display: inline-block;
+        width: 120px;
+        overflow: hidden;
         .title{
           display: inline-block;
           height: 30px;

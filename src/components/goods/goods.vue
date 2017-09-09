@@ -217,10 +217,10 @@
         .content{
           flex: 1;
           .name{
-            margin: 2px 0 8px 0;
-            height: 17px;
-            line-height: 17px;
-            font-size: 17px;
+            margin: 2px 0 4px 0;
+            height: 16px;
+            line-height: 16px;
+            font-size: 16px;
             color: #000;
           }
           .desc{
@@ -231,8 +231,9 @@
           }
           .price{
             font-weight: 700;
-            line-height: 24px;
+            line-height: 14px;
             .now{
+              display: block;
               margin-right: 4px;
               font-size: 14px;
               color: rgb(240,20,20);

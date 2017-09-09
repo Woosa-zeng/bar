@@ -4,9 +4,14 @@
   <meta charset="utf-8">
   <title>WOLF酒吧</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
-  <script async src="https://hammerjs.github.io/dist/hammer.js"></script>
-  <script async src="//cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
-  <script async src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+  <style>
+    .goods-content{
+      height: calc(100vh - 212px);
+    }
+  </style>
 </head>
 <body>
 <div id="app"></div>
@@ -15,7 +20,7 @@
 <script>
   setTimeout(function() {
     setImgPinch()
-  }, 5000)
+  }, 800)
 
   function setImgPinch() {
     var myElement = document.getElementById('img-hook')

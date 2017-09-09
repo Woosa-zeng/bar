@@ -9,7 +9,7 @@
         <div class="msg">
           <i class="icon-xiaolaba iconfont"></i>
           <span>欢迎您的光临！</span>
-          <p @click="showSeatImg">坐位示意图</p>
+          <p @click="showSeatImg" v-show="sm">坐位示意图</p>
         </div>
         <div class="img-ct" ref="imgct" v-show="seatImgFlag">
           <div class="mask" @click="hideSeatImg"></div>
@@ -78,7 +78,8 @@
         nickname: '',
         userInfo: {},
         seatImg: '',
-        seatImgFlag: false
+        seatImgFlag: false,
+        sm: ''
       }
     },
     created() {
@@ -89,6 +90,8 @@
       gender() {
         console.log('watch==' + this.ismale)
       }
+    },
+    mounted() {
     },
     computed: {
     },
@@ -114,15 +117,18 @@
         // axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
         //   console.log(res)
         // })
-//        let cId = this.GetQueryString('cId')
-//        let cName = decodeURI(this.GetQueryString('cName'))
-//        let seat = this.GetQueryString('seat')
-//        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
-        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
-        let cId = '402880e447e99cf10147e9a03b320003'
-        let cName = '深圳市好好酒吧有限公司'
-        let seat = 88888
-        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+        let cId = this.GetQueryString('cId')
+        let cName = decodeURI(this.GetQueryString('cName'))
+        let seat = this.GetQueryString('seat')
+        this.sm = this.GetQueryString('sm')
+        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
+//        this.sm = ''
+//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+//        let cId = '8a9874c75e5cf402015e61a0e3040061'
+//        let cName = '深圳市好好酒吧有限公司'
+//        let seat = 88888
+//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
 
         let nickname = window.localStorage.getItem('nickname')
         this.companyName = cName
@@ -190,14 +196,18 @@
         })).then(res => {
           this.$store.commit('USER_ID', {userId: res.data.id})
           this.$store.commit('SELF_AVATAR', {selfAvatar: res.data.images})
-          console.log('selfid=== ' + res.data.id)
+          let localName = window.localStorage.nickname
+          if (localName) {
+            this.saveNewName()
+          }
         })
       }
     }
   }
 </script>
 <style lang="less" rel="stylesheet/less">
-  @import "../../common/less/mixin.less";.img-ct{
+  @import "../../common/less/mixin.less";
+  .img-ct{
   .mask{
     position: absolute;
     z-index: 98;
@@ -210,16 +220,17 @@
   }
   .img-wraaper{
     position: absolute;
-    top: 0;
+    top: 25%;
     left: 0;
     width: 100%;
     height: 350px;
     overflow: hidden;
     z-index: 100;
+    background: #ccc;
   }
   img{
-    margin: 0 auto;
-    display: inherit;
+    width:100%;
+    height: 100%;
   }
   }
 
@@ -370,6 +381,7 @@
        background: #ccc;
      }
      .content{
+       min-height: 60px;
        display: inline-block;
        vertical-align: bottom;
        margin-left: 15px;
@@ -382,11 +394,19 @@
        }
        .msg{
          font-size: 12px;
-         margin-top: 8px;
-         margin-bottom: 8px;
+         margin-top: 4px;
+         margin-bottom: 4px;
          .icon-xiaolaba{
            font-size: 12px;
            color: #fff;
+         }
+         p{
+           margin-top: 5px;
+           border: 1px solid #884a55;
+           padding: 2px;
+           width: 62px;
+           border-radius: 4px;
+           .bgimg-pink-t-b;
          }
        }
      }

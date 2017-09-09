@@ -25,7 +25,7 @@
         </li>
       </ul>
     </div>
-    
+
     <div class="vfooter">
       <div class="content">
         <div class="footer-left">
@@ -81,6 +81,11 @@
       this.getShopCar()
       this.getAmount()
     },
+    mounted() {
+    },
+    beforeDestroy() {
+      this.$store.commit('ORDER_ID', {orderId: ''})
+    },
     methods: {
       isNumber() {
         let val = this.sentSomeone
@@ -99,7 +104,7 @@
         if (val === 0) {
           this.payment = '微信支付'
         } else {
-          this.payment = '在线支付'
+          this.payment = '线下支付'
         }
         setTimeout(() => {
           this.show = false
@@ -128,14 +133,8 @@
           giveSeatNumber: this.sentSomeone
         })).then((res) => {
           if (res.data.success) {
+            this.$store.commit('ORDER_ID', {orderId: ''}) // 支付成功清除orderid
             this.$router.push({name: 'paysuccess'})
-//            this.$message({
-//              type: 'success',
-//              message: '支付成功，即将返回！'
-//            })
-//            setTimeout(() => {
-//              this.$router.push('goods')
-//            }, 1500)
           } else {
             this.$message({
               type: 'error',
@@ -263,7 +262,6 @@
     }
     .goods-content{
       padding: 0 15px;
-      max-height: 456px;
       overflow: hidden;
       background: #fff;
       img{
