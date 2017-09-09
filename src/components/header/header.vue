@@ -117,18 +117,18 @@
         // axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
         //   console.log(res)
         // })
-        let cId = this.GetQueryString('cId')
-        let cName = decodeURI(this.GetQueryString('cName'))
-        let seat = this.GetQueryString('seat')
-        this.sm = this.GetQueryString('sm')
-        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
-        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
-//        this.sm = ''
-//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
-//        let cId = '8a9874c75e5cf402015e61a0e3040061'
-//        let cName = '深圳市好好酒吧有限公司'
-//        let seat = 88888
-//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+//        let cId = this.GetQueryString('cId')
+//        let cName = decodeURI(this.GetQueryString('cName'))
+//        let seat = this.GetQueryString('seat')
+//        this.sm = this.GetQueryString('sm')
+//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
+        this.sm = '1'
+        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+        let cId = '8a9874c75e5cf402015e61a0e3040061'
+        let cName = '深圳市好好酒吧有限公司'
+        let seat = 88888
+        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
 
         let nickname = window.localStorage.getItem('nickname')
         this.companyName = cName
@@ -386,7 +386,7 @@
        vertical-align: bottom;
        margin-left: 15px;
        h1{
-         font-size: 18px;
+         font-size: 17px;
          width: 145px;
          overflow: hidden;
          white-space: nowrap;

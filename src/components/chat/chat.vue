@@ -129,13 +129,13 @@
       }
       .ct{
         display: inline-block;
-        width: 120px;
+        width: 140px;
         overflow: hidden;
         .title{
           display: inline-block;
           height: 30px;
           line-height: 30px;
-          font-size: 17px;
+          font-size: 13px;
           font-weight: 700;
           color: #333;
           vertical-align: bottom;
@@ -160,7 +160,12 @@
           height: 20px;
           line-height: 20px;
           margin-bottom: 4px;
+          font-size: 10px;
           color: #7e8c8d;
+          width: 140px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
       }
     }
