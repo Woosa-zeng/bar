@@ -79,7 +79,8 @@
         userInfo: {},
         seatImg: '',
         seatImgFlag: false,
-        sm: ''
+        sm: '',
+        userId: window.localStorage.getItem('userid') || ''
       }
     },
     created() {
@@ -117,18 +118,18 @@
         // axios.get('/html/index.html?seat=88888&logo=index_16849634.jpg&cId=402880e447e99cf10147e9a03b320003&cName=encodeURI(%E2%80%99%E6%B7%B1%E5%9C%B3%E5%B8%82%E5%A5%BD%E5%A5%BD%E9%85%92%E5%90%A7%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E2%80%98)#/goods').then(res => {
         //   console.log(res)
         // })
-//        let cId = this.GetQueryString('cId')
-//        let cName = decodeURI(this.GetQueryString('cName'))
-//        let seat = this.GetQueryString('seat')
-//        this.sm = this.GetQueryString('sm')
-//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
-//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
-        this.sm = '1'
-        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
-        let cId = '8a9874c75e5cf402015e61a0e3040061'
-        let cName = '深圳市好好酒吧有限公司'
-        let seat = 88888
-        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+        let cId = this.GetQueryString('cId')
+        let cName = decodeURI(this.GetQueryString('cName'))
+        let seat = this.GetQueryString('seat')
+        this.sm = this.GetQueryString('sm')
+        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
+//        this.sm = '1'
+//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+//        let cId = '8a9874c75e5cf402015e61a0e3040061'
+//        let cName = '深圳市好好酒吧有限公司'
+//        let seat = 88888
+//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
 
         let nickname = window.localStorage.getItem('nickname')
         this.companyName = cName
@@ -136,6 +137,15 @@
         this.$store.commit('SELF_SEAT', {selfSeat: seat})
         this.$store.commit('COMPANY_NAME', {companyName: cName})
         this.$store.commit('COMPANY_ID', {companyId: cId})
+        let cashUrl = window.localStorage.getItem('urlCode') || ''
+        let cashUserId = window.localStorage.userId || ''
+        let urlCode = window.location.href || ''
+        if (!cashUrl) {
+          window.localStorage.setItem('urlCode', urlCode)
+        } else if (cashUrl === urlCode && cashUserId) {
+          console.log(`yes`)
+          this.setDataFromCash()
+        }
         document.title = cName
       },
       // 保存修改昵称
@@ -150,6 +160,12 @@
           this.$store.commit('NICKNAME', {nickname: newName})
         })
         this.closeChangenameFlag()
+      },
+      setDataFromCash() {
+        this.genderflag = true
+        this.ismale = window.localStorage.getItem('ismale')
+        this.$store.commit('USER_ID', {userId: window.localStorage.userId})
+        this.$store.commit('SELF_AVATAR', {selfAvatar: window.localStorage.selfAvatar})
       },
       // 取消修改昵称
       cancelNewName() {
@@ -173,12 +189,14 @@
           this.isfemale = false
           this.$store.commit('SEX', {sex: 0})
           this.selectSex()
+          window.localStorage.setItem('ismale', true)
           // id = 0
         } else {
           this.ismale = false
           this.isfemale = true
           this.$store.commit('SEX', {sex: 1})
           this.selectSex()
+          window.localStorage.setItem('ismale', false)
           // id = 1
         }
         // this.saveGender(id)
@@ -197,6 +215,8 @@
           this.$store.commit('USER_ID', {userId: res.data.id})
           this.$store.commit('SELF_AVATAR', {selfAvatar: res.data.images})
           let localName = window.localStorage.nickname
+          window.localStorage.setItem('userId', res.data.id)
+          window.localStorage.setItem('selfAvatar', res.data.images)
           if (localName) {
             this.saveNewName()
           }
