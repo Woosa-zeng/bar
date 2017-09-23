@@ -8,7 +8,7 @@
         <h1>{{companyName}}</h1>
         <div class="msg">
           <i class="icon-xiaolaba iconfont"></i>
-          <span>欢迎您的光临！</span>
+          <span>欢迎您的光临2！</span>
           <p @click="showSeatImg" v-show="sm">坐位示意图</p>
         </div>
         <div class="img-ct" ref="imgct" v-show="seatImgFlag">
@@ -140,11 +140,18 @@
         let cashUrl = window.localStorage.getItem('urlCode') || ''
         let cashUserId = window.localStorage.userId || ''
         let urlCode = window.location.href || ''
-        if (!cashUrl) {
-          window.localStorage.setItem('urlCode', urlCode)
-        } else if (cashUrl === urlCode && cashUserId) {
-          console.log(`yes`)
+        let flag = urlCode.slice(urlCode.length - 5, urlCode.length)
+        if (flag === 'goods') {
+          console.log(`goods`)
+          if (!cashUrl) {
+            window.localStorage.setItem('urlCode', urlCode)
+          } else if (cashUrl === urlCode && cashUserId) {
+            console.log(`yes`)
+            this.setDataFromCash()
+          }
+        } else {
           this.setDataFromCash()
+          console.log('chat')
         }
         document.title = cName
       },

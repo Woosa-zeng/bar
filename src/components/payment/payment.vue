@@ -119,7 +119,8 @@
         }
       },
       payOnline() {
-        let state = this.$store.state.orderId + ',' + (this.sentSomeone || 0)
+        let nickname = window.localStorage.nickname || ''
+        let state = this.$store.state.orderId + ',' + (this.sentSomeone || 0) + ',' + nickname
         console.log(`state== ${state}`)
         let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
         let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
@@ -130,7 +131,8 @@
         axios.post('/api/tOrderController.do?pay', qs.stringify({
           id: this.$store.state.orderId,
           payType: this.paymentFlag,
-          giveSeatNumber: this.sentSomeone
+          giveSeatNumber: this.sentSomeone,
+          nickname: window.localStorage.nickname || ''
         })).then((res) => {
           if (res.data.success) {
             this.$store.commit('ORDER_ID', {orderId: ''}) // 支付成功清除orderid

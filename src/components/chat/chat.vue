@@ -6,8 +6,10 @@
           <div class="left">
             <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
+              <div v-show="item.nickName">123</div>
               <div class="title">
-                {{item.nickName ? item.nickName : item.seat}}
+                <span v-if="!item.nickName">{{item.seat}}</span>
+                <span v-else>{{item.nickName}}</span>
                 <div class="icon" :class="{r40: ismale}">
                   <i v-if="item.sex < 1" class="icon-male iconfont"></i>
                   <i v-else class="icon-female iconfont"></i>
