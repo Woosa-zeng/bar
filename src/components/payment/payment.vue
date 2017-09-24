@@ -132,7 +132,7 @@
           id: this.$store.state.orderId,
           payType: this.paymentFlag,
           giveSeatNumber: this.sentSomeone,
-          nickname: window.localStorage.nickname || ''
+          nickName: window.localStorage.nickname || ''
         })).then((res) => {
           if (res.data.success) {
             this.$store.commit('ORDER_ID', {orderId: ''}) // 支付成功清除orderid
