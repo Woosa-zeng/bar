@@ -80,6 +80,7 @@
     created() {
       this.getShopCar()
       this.getAmount()
+      this.getPayInfo()
     },
     mounted() {
     },
@@ -87,6 +88,13 @@
       this.$store.commit('ORDER_ID', {orderId: ''})
     },
     methods: {
+      getPayInfo() {
+        axios.post('/api/tOrderController.do?payInfo', qs.stringify({
+          departId: this.$store.state.companyId
+        })).then((res) => {
+          console.log(res.data)
+        })
+      },
       isNumber() {
         let val = this.sentSomeone
         val = val - 0
