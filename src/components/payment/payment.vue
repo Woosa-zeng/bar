@@ -41,7 +41,7 @@
       <div class="selectPayment" v-if="show">
         <div class="paymentHeader">选择付款方式</div>
         <ul>
-          <li class="payment-item" @click="changePayment(0)">
+          <li class="payment-item" @click="changePayment(0)" v-show="payInfo">
             <div>
               <img src="./icon_wx.png" alt="" width="30" height="30">
               <span>微信支付</span>
@@ -67,14 +67,15 @@
   export default {
     data() {
       return {
-        imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         seat: this.$store.state.selfSeat,
         sentSomeone: '',
         shopCar: [],
         show: false,
-        payment: '微信支付',
-        paymentFlag: 0,
-        amount: ''
+        payment: '线下支付',
+        paymentFlag: 1,
+        amount: '',
+        payInfo: false
       }
     },
     created() {
@@ -92,7 +93,11 @@
         axios.post('/api/tOrderController.do?payInfo', qs.stringify({
           departId: this.$store.state.companyId
         })).then((res) => {
-          console.log(res.data)
+          if (res.data.success) {
+            this.payInfo = true
+            this.payment = '微信支付'
+            this.paymentFlag = 0
+          }
         })
       },
       isNumber() {
@@ -130,7 +135,7 @@
         let nickname = window.localStorage.nickname || ''
         let state = this.$store.state.orderId + ',' + (this.sentSomeone || 0) + ',' + nickname
         console.log(`state== ${state}`)
-        let url = 'http://pay.zuchezaixian.net/api/tOrderController.do?wxPay'
+        let url = 'http://sz.jlhuanqi.com:8080/api/tOrderController.do?wxPay'
         let weixinUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxea944f4cb5ae3127&redirect_uri=' + encodeURI(url) + `&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`
         window.location.href = encodeURI(weixinUrl)
         console.log(weixinUrl)

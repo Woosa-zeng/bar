@@ -35,7 +35,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://pay.zuchezaixian.net',
+        imgurl: 'http://sz.jlhuanqi.com:8080',
         listItem: [],
         ismale: true
       }

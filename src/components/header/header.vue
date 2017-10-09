@@ -67,7 +67,7 @@
   export default {
     data() {
       return {
-        imgurl: 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=',
+        imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         gender: '',
         companyAvatar: '',
         companyName: '',
@@ -122,14 +122,14 @@
         let cName = decodeURI(this.GetQueryString('cName'))
         let seat = this.GetQueryString('seat')
         this.sm = this.GetQueryString('sm')
-        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
-        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
+        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('logo')
+        this.seatImg = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
 //        this.sm = '1'
-//        this.seatImg = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+//        this.seatImg = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
 //        let cId = '8a9874c75e5cf402015e61a0e3040061'
 //        let cName = '深圳市好好酒吧有限公司'
 //        let seat = 88888
-//        this.companyAvatar = 'http://pay.zuchezaixian.net/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
+//        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
 
         let nickname = window.localStorage.getItem('nickname')
         this.companyName = cName

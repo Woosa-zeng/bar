@@ -34,7 +34,7 @@
   export default {
     data() {
       return {
-        msgurl: 'http://pay.zuchezaixian.net',
+        msgurl: 'http://sz.jlhuanqi.com:8080',
         ios: false,
         focus: false,
         selfId: this.$store.state.userId,
