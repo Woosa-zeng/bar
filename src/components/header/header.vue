@@ -8,7 +8,7 @@
         <h1>{{companyName}}</h1>
         <div class="msg">
           <i class="icon-xiaolaba iconfont"></i>
-          <span>欢迎您的光临2！</span>
+          <span>欢迎您的光临！</span>
           <p @click="showSeatImg" v-show="sm">坐位示意图</p>
         </div>
         <div class="img-ct" ref="imgct" v-show="seatImgFlag">
@@ -126,7 +126,7 @@
         this.seatImg = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=' + this.GetQueryString('sm')
 //        this.sm = '1'
 //        this.seatImg = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
-//        let cId = '8a9874c75e5cf402015e61a0e3040061'
+//        let cId = '2c908a945efb142f015f107b1ae40049'
 //        let cName = '深圳市好好酒吧有限公司'
 //        let seat = 88888
 //        this.companyAvatar = 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=index_16849634.jpg'
@@ -143,9 +143,8 @@
         let flag = urlCode.slice(urlCode.length - 5, urlCode.length)
         if (flag === 'goods') {
           console.log(`goods`)
-          if (!cashUrl) {
-            window.localStorage.setItem('urlCode', urlCode)
-          } else if (cashUrl === urlCode && cashUserId) {
+          window.localStorage.setItem('urlCode', urlCode)
+          if (cashUrl === urlCode && cashUserId) {
             console.log(`yes`)
             this.setDataFromCash()
           }
@@ -414,6 +413,7 @@
        margin-left: 15px;
        h1{
          font-size: 17px;
+         line-height: 18px;
          width: 145px;
          overflow: hidden;
          white-space: nowrap;

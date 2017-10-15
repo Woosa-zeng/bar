@@ -304,6 +304,10 @@
         .ct{
           display: inline-block;
           .title{
+            width: 90px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
             line-height: 40px;
             font-size: 14px;
             color: #000;

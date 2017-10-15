@@ -6,7 +6,7 @@
           <div class="left">
             <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
-              <div v-show="item.nickName">123</div>
+              <div v-show="item.nickName">{{item.seat}}</div>
               <div class="title">
                 <span v-if="!item.nickName">{{item.seat}}</span>
                 <span v-else>{{item.nickName}}</span>
