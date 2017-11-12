@@ -126,28 +126,35 @@
             field: 'departId,sendSeat,receiveSeat,msg,createDate'
           }
         }).then((res) => {
-          this.chatMsg = res.data
-          this.$nextTick(() => {
-            this._initScroll()
-          })
+          console.log(`获取消息`)
+          if (res.data) {
+            this.chatMsg = res.data
+            this.$nextTick(() => {
+              this._initScroll()
+            })
+          }
         }).catch((error) => {
           console.log(error)
         })
       },
       goScrollY() {
-        this.$nextTick(() => {
-          let el = this.$refs.msgwrapperul.lastElementChild
-          this.msgScroll.refresh()
-          this.msgScroll.scrollToElement(el, 400)
-        })
+        if (this.chatMsg.length) {
+          this.$nextTick(() => {
+            let el = this.$refs.msgwrapperul.lastElementChild
+            this.msgScroll.refresh()
+            this.msgScroll.scrollToElement(el, 400)
+          })
+        }
       },
       _initScroll() {
-        this.msgScroll = new BScroll(this.$refs.msgwrapper, {
-          click: true,
-          probeType: 3
-        })
-        let el = this.$refs.msgwrapperul.lastElementChild
-        this.msgScroll.scrollToElement(el, 400)
+        if (this.chatMsg.length) {
+          this.msgScroll = new BScroll(this.$refs.msgwrapper, {
+            click: true,
+            probeType: 3
+          })
+          let el = this.$refs.msgwrapperul.lastElementChild
+          this.msgScroll.scrollToElement(el, 400)
+        }
       },
       _initTime() {
         let time = new Date()

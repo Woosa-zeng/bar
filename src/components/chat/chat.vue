@@ -2,7 +2,7 @@
   <div class="chat">
     <div class="list-wrapper" ref="listwrapper">
       <ul>
-        <li @click="goChating(item.id,item.seat,item.nickName)" class="list-item" v-for="item in listItem">
+        <li @click="goChating(item.id,item.seat,item.nickName)" class="list-item" v-for="(item, index) in listItem">
           <div class="left">
             <img :src="imgurl+item.images" alt="" width="60" height="60">
             <div class="ct">
@@ -20,9 +20,9 @@
               </div>
             </div>
           </div>
-          <div class="right" v-if="item.msgs">
+          <div class="right" v-if="item.readStatus===0">
             <div class="time">{{item.createBy}}</div>
-            <div class="icon"></div>
+            <div class="icon" ></div>
           </div>
         </li>
       </ul>
