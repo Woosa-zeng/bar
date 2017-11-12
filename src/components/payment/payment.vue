@@ -4,7 +4,10 @@
       <p class="bor-1px"><span class="title">我的桌号</span> <span class="tr">{{seat}}</span></p>
     </div>
     <div class="col">
-      <p class="bor-1px"><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" ref="nicknamebox" placeholder="如果要赠送给他人，可以填写对方桌号" ></p>
+      <p class="bor-1px"><span class="title mr20">酒水送往</span><input v-model="sentSomeone" class="sentOut" maxlength="8" placeholder="如果要赠送给他人，可以填写对方桌号" ></p>
+    </div>
+    <div class="col">
+      <p class="bor-1px"><span class="title mr20">订单留言</span><input v-model="sentMsg" class="sentOut" maxlength="20" placeholder="如果有留言可以填写" ></p>
     </div>
     <div class="col pay-online">
       <p><span class="title">支付方式</span><span class="fr goChangePayment" @click="show=!show">{{payment}}</span></p>
@@ -59,7 +62,7 @@
       </div>
     </transition>
   </div>
-</template>
+</template>`
 <script >
   import axios from 'axios'
   import BScroll from 'better-scroll'
@@ -70,6 +73,7 @@
         imgurl: 'http://sz.jlhuanqi.com:8080/api/cgformTemplateController.do?showPic&path=',
         seat: this.$store.state.selfSeat,
         sentSomeone: '',
+        sentMsg: '',
         shopCar: [],
         show: false,
         payment: '线下支付',
@@ -145,7 +149,8 @@
           id: this.$store.state.orderId,
           payType: this.paymentFlag,
           giveSeatNumber: this.sentSomeone,
-          nickName: window.localStorage.nickname || ''
+          nickName: window.localStorage.nickname || '',
+          remark: this.sentMsg
         })).then((res) => {
           if (res.data.success) {
             this.$store.commit('ORDER_ID', {orderId: ''}) // 支付成功清除orderid
@@ -330,6 +335,9 @@
       p{
         margin-left: 20px;
         margin-right: 20px;
+        input{
+          outline: none;
+        }
         .fr{
           float: right;
         }

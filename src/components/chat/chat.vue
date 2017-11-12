@@ -40,12 +40,11 @@
         ismale: true
       }
     },
-    created() {
-      this.getList()
+    beforeDestroy() {
+      window.clearInterval(this.getList)
     },
-    methods: {
-      getList() {
-        // this.getCurMsg = setInterval(() => {
+    created() {
+      this.getList = setInterval(() => {
         axios.get('/api/tChatUserController.do?datagrid', {
           params: {
             departId: this.$store.state.companyId,
@@ -61,8 +60,9 @@
         }).catch((error) => {
           console.log(error)
         })
-        // }, 3000)
-      },
+      }, 2000)
+    },
+    methods: {
       _initScroll() {
         this.listScroll = new BScroll(this.$refs.listwrapper, {
           click: true
